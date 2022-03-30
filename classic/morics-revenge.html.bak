@@ -1,0 +1,955 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>MORIC'S REVENGE ONLINE</title>
+		<meta name="author" value="JACOB JOHNSON"/>
+		<meta name="description" value="Moric's Revenge Online"/>
+		<meta name="keywords" value="Moric, Moric Developers, Moric's Revenge, Morics Revenge, nnnNNnnn, nnnNNnnn.info"/>
+		<link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'/>
+		<link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'/><!--google monospace fonts-->
+		<style>
+			::selection{
+				background-color: rgba(0,0,0,0);
+			}
+		</style>
+		<script src="https://www.googledrive.com/host/0B64yky1xGnt3SFRxRDFpMVh2Mnc"></script>
+		<script type="text/javascript">
+			var version = "v.999999repeating";
+			
+			var screenX;
+			var screenY;
+			var fillConstant = .8;
+		
+			var screenLayout;
+			
+			var notificationLineLength=37;
+			var notificationLineCount=32;
+			var notificationLayout = new Array(notificationLineCount);
+			for(var i=0; i<notificationLayout.length; i++)
+			{
+				notificationLayout[i] = "&nbsp;";
+			}
+			
+			var playerX = 5;
+			var playerY = 5;
+			var deltaPlayerX = 0;
+			var deltaPlayerY = 0;
+			var oldPlayerX = 5;
+			var oldPlayerY = 4;
+
+			
+			var animals;
+			var animalSpeed = 6.667;
+			
+			var MoricObject = 
+			{
+				symbol: "â˜º",
+				name: "moric object",
+				newMoricObject: function(toSymbol, toName)
+				{
+					var toReturn = JSON.parse(JSON.stringify(this));
+					toReturn.symbol = toSymbol;
+					toReturn.name = toName;
+					return toReturn;
+				},
+			}
+			var Wall = MoricObject.newMoricObject("#", "wall");
+			var PLAYER = "<span style='color:red'>&</span>";
+			var Empty = MoricObject.newMoricObject("&nbsp;", "empty");
+			var Apple = MoricObject.newMoricObject("<span style='color:limegreen'>a</span>", "apple");
+			var Tree = MoricObject.newMoricObject("<span style='color:chocolate'>!</span>", "tree");
+			var Rock = MoricObject.newMoricObject("<span style='color:"+randomRockColor()+"'>.</span>", "rock");
+			var Iron = MoricObject.newMoricObject("I", "iron");
+			var Mask = MoricObject.newMoricObject("g", "mask");
+			var Chicken = MoricObject.newMoricObject("D", "chicken");
+			var Temple = MoricObject.newMoricObject("<span style='color:purple'>+</span>", "temple");
+			Temple.runCount = 1;
+			var Log = MoricObject.newMoricObject("<span style='color:chocolate'>_</span>", "branch");
+			var ANIMAL = "<span style='color:orange'>%</span>";
+			var Loot = MoricObject.newMoricObject("<span style='color:orangered'>$</span>", "loot");
+			var Notifier = MoricObject.newMoricObject("&nbsp;", "notifier");
+			Notifier.whatToNotify = "notification";
+			Notifier.newNotifier = function(toWhatToNotify)
+			{
+				toReturn = JSON.parse(JSON.stringify(this));
+				toReturn.whatToNotify = toWhatToNotify;
+				return toReturn;
+			}
+			var Nun =  MoricObject.newMoricObject("N", "nun");
+			Nun.x;
+			Nun.y;
+			Nun.isActive;
+			Nun.newNun = function(toX, toY, toIsActive)
+			{
+				toReturn = JSON.parse(JSON.stringify(this));
+				toReturn.x = toX;
+				toReturn.y = toY;
+				toReturn.isActive = toIsActive;
+				return toReturn;
+			}
+                        
+			var Inventory = //class inventory
+			{
+				stuff: [[Empty]],
+				add: function(num, item)
+				{
+					for(var i=0; i<num; i++)
+					{
+						this.add1(item);
+					}
+					notify("got: " + num + " " + item.name + "(s)");
+				},
+				add1: function(item)
+				{
+					testInventoryLoop: do
+					{
+						for(var i=0; i<this.stuff.length; i++)
+						{
+							if(item == this.stuff[i][0])
+							{
+								this.stuff[i][this.stuff[i].length] = item;
+								break testInventoryLoop;
+							}
+						}
+						this.stuff[this.stuff.length] = [item];
+					}while(false)
+				},
+				remove: function(number, item)
+				{
+					for(var i=0; i<this.stuff.length; i++)
+					{
+						if(item == this.stuff[i][0])
+						{
+							this.stuff[i].splice(-number, number);
+							if(this.stuff[i].length == 0)
+								this.stuff.splice(i, 1);
+						}
+					}
+				},
+				printInventory: function()
+				{
+					var toReturn = "";
+					for(var i=1; i<this.stuff.length; i++)
+					{
+						toReturn += (this.stuff[i][0].name + " x " + this.stuff[i].length + "&nbsp;&nbsp;&nbsp;&nbsp;");
+					}
+					if(toReturn == "")
+						toReturn = "Inventory Empty";
+					return toReturn;
+				},
+				has: function(item)
+				{
+					var toReturn = 0;
+					for(var i=1; i<this.stuff.length; i++)
+					{
+						if(this.stuff[i][0] == item)
+							toReturn += this.stuff[i].length;
+					}
+					return toReturn;
+				},
+			}
+			var inventory = Inventory;
+			var player = 
+			{
+				quests: [],
+				hasQuest: function(count)
+				{
+					var toReturn = false;
+					for(var i=0; i<this.quests.length; i++)
+					{
+						if(this.quests[i].count == count)
+						{
+							toReturn = true;
+						}
+					}
+					return toReturn;
+				},
+				addQuest: function(toAdd)
+				{
+					this.quests[this.quests.length] = toAdd;
+				},
+				removeQuest:function(countToRemove)
+				{
+					for(var i=0; i<this.quests.length; i++)
+					{
+						if(this.quests[i].count == countToRemove)
+						{
+							inventory.remove(this.quests[i].amount, this.quests[i].item);
+							inventory.add(this.quests[i].rewardAmount, this.quests[i].rewardItem);
+							this.quests.splice(i,1);
+						}
+					}
+				},
+				printQuests: function()
+				{
+					var toReturn = "";
+					for(var i=0; i<this.quests.length; i++)
+					{
+						toReturn += "Get " + this.quests[i].amount + " " + this.quests[i].item.name + "s.&nbsp;&nbsp;";
+					}
+					if(toReturn == "")
+						toReturn = "none";
+					notify("Quests: " + toReturn);
+				},
+			}
+			function Villager()
+			{
+				this.symbol = "H";
+				this.name = "villager";
+				this.quest = new Quest();
+				this.interact = function()
+				{
+					if(player.hasQuest(this.quest.count))
+					{
+						if(this.quest.isComplete())
+						{
+							player.removeQuest(this.quest.count);
+							notify("villager: thanks for completing this quest for me");
+							if(Math.random() < .65)
+								this.quest = new Quest();
+						}
+						else
+						{
+							notify("villager: you have not completed my quest");
+						}
+					}
+					else
+					{
+						if(this.quest.isComplete())
+						{
+							var toVillagerText = Math.random();
+							var toNotify = "";
+							if(toVillagerText < .13)
+								toNotify = "\"bre\"";
+							else if(toVillagerText < .134)
+							{
+								toNotify = "Its dangerous to go alone. Take this: ";
+								if(inventory.has(Mask) == 1)
+								{
+									inventory.add(1, Iron);
+								}
+								else
+								{
+									inventory.add(1, Mask);
+								}
+							}
+							else if(toVillagerText < .14)
+							{
+								toNotify = "i just thought of something else you could do for me";
+								this.quest = new Quest();
+								this.interact();
+							}
+							else if(toVillagerText < .15)
+							{
+								toNotify = "My name is Leeroy M. Jenkins. Have some chicken.";
+								inventory.add(1, Chicken);
+							}
+							else if(toVillagerText < .16)
+								toNotify = "spaaaaaaaace";
+							else if(toVillagerText < .17)
+								toNotify = "press B to jump";
+							else if(toVillagerText < .20)
+								toNotify = "welcome to the village";
+							else if(toVillagerText < .205)
+								toNotify = "look. life is bad. evryones sad. we're all gona die. but i alredy bought this inflatable boumcy castle so r u gona take ur shoes off or wat";
+							else if(toVillagerText < .25)
+								toNotify = "use the force";
+							else if(toVillagerText < .26)
+								toNotify = "<a href=\"http://www.nnnNNnnn.info/morics-revenge.html\" target=\"_blank\">click here</a>";
+							else if(toVillagerText < .30)
+								toNotify = "what are you doing still here";
+							else if(toVillagerText < .32)
+								toNotify = "...sixteen million, seven-hundred seventy-seven thousand, two-hundreed sixteen...";
+							else if(toVillagerText < .35)
+								toNotify = " hola como estas. como te llamas. cuantos a&ntilde;os tienes. de donde eres";
+							else if(toVillagerText < .40)
+								toNotify = "stealing is not bad"
+							else if(toVillagerText < .42)
+								toNotify = "ruff"
+							else if(toVillagerText < 1)
+								toNotify = "Default text";
+							notify("villager: " + toNotify);
+						}
+						else
+						{
+							player.addQuest(this.quest);
+							notify("villager: please bring me " + this.quest.amount + " " + this.quest.item.name + "(s)");
+						}
+					}
+				}
+			}
+			Villager.count = 0;
+			
+			function Quest()
+			{
+				this.count = Quest.count;//which quest number, for identification purposes
+				this.amount = Math.round(3*Math.random()+1);//how many items to gather
+				this.rewardAmount = Math.round(5*Math.random()+3);//how many items given as a reward
+				var toItem = Math.random();//which item must be gathered
+				if(toItem < .20)
+				{
+					this.item = Apple;
+					this.amount += 3;
+				}
+				else if(toItem < .40)
+				{
+					this.item = Rock;
+					this.amount++;
+				}
+				else if(toItem < .60)
+					this.item = Loot;
+				else if(toItem < .80)
+					this.item = Log;
+				else
+				{
+					this.item = Iron;
+					this.rewardAmount++;
+				}
+				var toRewardItem = Math.random();//which item to be given as a reward
+				if(toRewardItem < .30)
+					this.rewardItem = Log;
+				else if(toRewardItem < .60)
+					this.rewardItem = Loot;
+				else if(toRewardItem < 1)
+				{
+					if(inventory.has(Mask) < 1 && toRewardItem > .95)
+					{
+						this.rewardItem = Mask;
+						this.rewardAmount = 1;
+					}
+					else
+					{
+						this.rewardItem = Iron;
+						this.rewardAmount++;
+					}
+				}
+				if(this.item.name == this.rewardItem.name)//if the item and the reward are the same, item is switched to an apple and reward to iron
+				{
+					this.item = Apple;
+					this.rewardItem = Iron;
+				}
+				this.complete = false;
+				this.isComplete = function()
+				{
+					if(this.complete)
+						return true;
+					else if(inventory.has(this.item) >= this.amount && player.hasQuest(this.count))
+					{
+						this.complete = true;
+						return true;
+					}
+					else
+						return false;
+				}
+				Quest.count++;
+			}
+			Quest.count = 0;
+						
+			var buttonsAreDisplayed = false;
+            var musicIsPlaying = false;
+			
+			
+			function load__()
+			{
+				document.getElementById("version-number").innerHTML = version;
+				if(window.prompt("map size: large or small? (small is default)", "") === "large")
+				{
+					screenX = 16;
+					screenY = 32;
+					document.getElementById("screen").style = "font-family:VT323,monospace;font-size:28px;width:380px;height:450px;background-color:green;border:4px solid black;border-right:2px solid black;float:left";
+				}
+				else
+				{
+					screenX = 12;
+					screenY = 24;
+				}
+				load_();
+				moveAnimals();
+				notify("press H for help");
+			}
+			
+			
+			function load_()
+			{
+				nun = Nun.newNun(2, 1, false);
+			
+				fillConstant = .15*Math.random()+.03;//sets generation variables
+				var treeFill = fillConstant+.1;
+				var appleFill = fillConstant*fillConstant + .05;
+				var rockFill = .12-fillConstant;
+				animals = new Array(Math.round(screenY*fillConstant + screenX));//creates animal array
+			
+				screenLayout = new Array(screenX);//creates 1D array
+				for(var i=0; i<screenLayout.length; i++)
+				{
+					screenLayout[i] = new Array(screenY);//creates 2D array
+				}
+				
+				for(var i=0; i<screenX; i++)//adds walls around edges
+				{
+					screenLayout[i][screenY-1] = Wall;
+					screenLayout[i][0] = Wall;
+				}
+				for(var i=0; i<screenY; i++)//adds walls around edges part II
+				{
+					screenLayout[screenX-1][i] = Wall;
+					screenLayout[0][i] = Wall;
+				}
+				for(var i=1; i<screenLayout.length-1; i++)//map generation
+				{
+					for(var j=1; j<screenLayout[i].length-1; j++)
+					{
+						screenLayout[i][j] = Empty;//populates empty array
+						if(Math.random() < fillConstant)
+						{
+							screenLayout[i][j] = Tree;//tree generation
+						}
+						if(Math.random() < appleFill && screenLayout[i][j] != Tree && (screenLayout[i-1][j] == Tree || screenLayout[i+1][j] == Tree || screenLayout[i-1][j-1] == Tree ||screenLayout[i-1][j+1] == Tree || screenLayout[i+1][j+1] == Tree || screenLayout[i][j-1] == Tree || screenLayout[i][j+1] == Tree)) 
+						{
+							screenLayout[i][j] = Apple;//apple generation
+						}
+						if(Math.random()*Math.random()-.1*Math.random() < rockFill && screenLayout[i][j] != Tree && screenLayout[i][j] != Apple)
+						{
+							screenLayout[i][j] = Rock;//rock generation
+						}
+					}
+				}
+				screenLayout[Math.round((screenLayout.length-3)*Math.random()+1)][Math.round((screenLayout[screenLayout.length-1].length-3)*Math.random()+1)] = Apple;//makes sure there is at least one apple
+				screenLayout[Math.round((screenLayout.length-3)*Math.random()+1)][Math.round((screenLayout[screenLayout.length-1].length-3)*Math.random()+1)] = Rock;//makes sure there is at least one rock
+				
+				for(var i = 0; i<animals.length; i++)//generates animals
+				{
+					animals[i] = new Array(6);
+					animals[i][0] = Math.round((screenLayout.length-3)*Math.random()+1);//animalX
+					animals[i][1] = Math.round((screenLayout[screenLayout.length-1].length-3)*Math.random()+1);//animalY
+					animals[i][3] = i;//identifier
+					animals[i][4] = 6;//health
+					animals[i][5] = true;
+				}
+				
+				screenLayout[1][1] = Temple;//the following block is of code generates the upper left structure
+				screenLayout[1][2] = Wall;
+				screenLayout[2][2] = Wall;
+				screenLayout[2][1] = Empty;//nun coords
+				screenLayout[3][1] = Empty
+				screenLayout[3][2] = Empty;
+				
+				var xRand = Math.round((screenX/9)*Math.random()+2*screenX/3-3);//the following block of code generates the lower right structure
+				var yRand = Math.round((screenY/9)*Math.random()+2*screenY/3-3);
+				for(var i=xRand; i<screenX; i++)
+				{
+					screenLayout[i][yRand] = Wall;
+				}
+				for(var i=yRand; i<screenY; i++)
+				{
+					screenLayout[xRand][i] = Wall;
+				}
+				for(var i=xRand+1; i<screenX-1; i++)
+				{
+					for(var j=yRand+1; j<screenY-1; j++)
+					{
+						screenLayout[i][j] = Empty;
+						if(Math.random() < .07)
+						{
+							screenLayout[i][j] = new Villager();
+						}
+					}
+				}
+				var yRand2 = Math.round((screenY-yRand-4)*Math.random()+1);
+				screenLayout[xRand-1][yRand+yRand2] = Empty;
+				screenLayout[xRand][yRand+yRand2] = Notifier.newNotifier("Welcome to the Village");
+				screenLayout[xRand+1][yRand+yRand2] = Empty;
+				screenLayout[xRand-1][yRand+yRand2+1] = Empty;
+				screenLayout[xRand][yRand+yRand2+1] = Notifier.newNotifier("Welcome to the Village");
+				screenLayout[xRand+1][yRand+yRand2+1] = Empty;
+				if(Math.random() < .5)
+				{
+					screenLayout[screenX-2][screenY-2] = new Villager();
+				}
+				else
+				{
+					screenLayout[xRand+1][screenY-2] = new Villager();
+				}
+				
+				
+				screenLayout[playerX][playerY] = Empty;//makes sure the player doesnt appear on top of another object
+				
+				printScreen();
+			}
+			function key_(e)
+			{
+				key__(String.fromCharCode(e.which));
+			}
+			function key__(key1)
+			{
+				//document.getElementById("control").value = "";
+				if(key1 === "w" || key1 === "W")
+				{
+					deltaPlayerX = -1;
+				}
+				else if(key1 === "a" || key1 === "A")
+				{
+					deltaPlayerY = -1;
+				}
+				else if(key1 === "s" || key1 === "S")
+				{
+					deltaPlayerX = 1;
+				}
+				else if(key1 === "d" || key1 === "D")
+				{
+					deltaPlayerY = 1;
+				}
+				else if(key1 === "f" || key1 === "F")
+				{
+					obtain();
+				}
+				else if(key1 === "e" || key1 === "E")
+				{
+					notify(inventory.printInventory());
+				}
+				else if(key1 === "h" || key1 === "H")
+				{
+					alert("Use keys W, A, S, and D to move your character (&) around the map and use F to pick up objects. Press E to display inventory. Press M to toggle music or press H for help. #=wall, !=tree, a=apple, .=rock, _=branch, %=animal, $=loot, +=?, N=?")
+				}
+                else if(key1 === "m" || key1 === "M")
+                {
+					toggleMusic();
+                }
+				else if(key1 === "b" || key1 === "B")
+				{
+					if(Math.random() < .02)
+					{
+						notify("you have jumped but there is no representation of height in this two-dimensional map");
+					}
+				}
+				else if(key1 === "x" || key1 === "X")
+				{
+					if(nun.isActive)
+					{
+						nun.isActive = false;
+						notify("nun: goodbye");
+					}
+				}
+				else if(key1 === "q" || key1 === "Q")
+				{
+					player.printQuests();
+				}
+				else if(key1 === "P")
+				{
+					animalSpeed = window.prompt("How fast should the animals go?", "number of movements per second");
+				}
+				movePlayer();
+				deltaPlayerX = 0;
+				deltaPlayerY = 0;
+				printScreen();
+			}
+			function moveAnimals()
+			{
+				setTimeout(//code to move animals
+					function()
+					{
+						for(var i=0; i<animals.length; i++)
+						{
+							var deltaAnimalX = 0;
+							var deltaAnimalY = 0;
+							if(playerX > animals[i][0])//detirmines whether to move positive or negative along X axis
+								deltaAnimalX = -1;
+							else if(playerX == animals[i][0])
+								deltaAnimalX = Math.round(2*Math.random()-1);
+							else
+								deltaAnimalY = 1;
+							if(playerY > animals[i][1])//determines whether to move positive or negative along Y axis
+								deltaAnimalY = -1;
+							else if(playerY == animals[i][1])
+								deltaAnimalY = Math.round(2*Math.random()-1);
+							else
+								deltaAnimalY = 1;
+							if(Math.random() < .5)//determines whether to move along X axis or Y axis
+								deltaAnimalX = 0;
+							else
+								deltaAnimalY = 0;
+							if(Math.random() < .3)
+							{
+								deltaAnimalX = -deltaAnimalX;
+								deltaAnimalY = -deltaAnimalY;
+							}
+							if(isPassable((animals[i][0]+deltaAnimalX),(animals[i][1]+deltaAnimalY)) && animals[i][5])
+							{
+								animals[i][0] += deltaAnimalX;
+								animals[i][1] += deltaAnimalY;
+							}
+						}
+						printScreen();
+						moveAnimals();
+					}, (1000/animalSpeed)
+				)
+			}
+			function movePlayer()
+			{
+				if(screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].name === "wall")
+				{
+					if(Math.random() < .01)
+					{
+						notify("stop banging your head against the wall");
+					}
+				}
+				else if(screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].name === "tree")
+				{
+					if(Math.random() < .3)
+					{
+						notify("you picked an apple from the tree");
+						inventory.add(1, Apple);
+					}
+					else if(Math.random() < .2)
+					{	
+						notify("you found a tree 10/10 proud");
+					}
+					if(nun.isActive)
+					{
+						screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY] = Log;
+						notify("nun: *breaks tree with bare hands*");
+					}
+				}
+				else if(screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].name === "temple")
+				{
+					var won = true;
+					if(inventory.has(Loot) + inventory.has(Chicken) < (screenX/2 + Temple.runCount))
+						won = false;
+					for(var i=0; i<screenLayout.length; i++)
+					{
+						for(var j=0; j<screenLayout[i].length; j++)
+						{
+							if(screenLayout[i][j] == Apple)
+							{
+								won = false;
+							}
+						}
+					}
+					if(won)
+					{
+						riddles(Temple.runCount);
+					}
+					else
+					{
+						notify("you found an ancient temple")
+					}
+				}
+				else if(screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].name === "villager")
+				{
+					screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].interact();
+				}
+				else if(playerX+deltaPlayerX == nun.x && playerY+deltaPlayerY == nun.y)
+				{
+					if(!nun.isActive)
+					{
+						notify("nun: hello I am a time-traveling bodybuilding nun from the year 2211. press x for me to leave you alone");
+						nun.isActive = true;
+					}
+					else
+					{	
+						var randInt1 = Math.random();
+						if(randInt1 < .03)
+						{
+							notify("nun: \"bre\"");
+						}
+						else if(randInt1 < .50)
+						{
+							notify("nun: lorem ipsum dolor sit amet");
+						}
+						else if(randInt1 < .97)
+						{
+							notify("nun: let's go chop down some trees");
+						}
+						else
+						{
+							notify("nun: press B to jump");
+						}
+					
+						var tempX = playerX;
+						var tempY = playerY;
+						playerX = nun.x;
+						playerY = nun.y;
+						nun.x = tempX;
+						nun.y = tempY;
+					}
+				}
+				else
+				{
+					var willMove = true;
+					for(var i=0; i<animals.length; i++)//checks if player hits animal
+					{
+						if(playerX+deltaPlayerX == animals[i][0] && playerY+deltaPlayerY == animals[i][1] && animals[i][5])
+						{
+							animals[i][4]--;//lose health
+							if(Math.random() < .03)	
+								notify("why would you hurt an innocent animal?")
+							else
+								notify("you hit the animal and it lost health")
+							if(animals[i][4] == 0)
+							{
+								notify("you finally killed the animal");
+								screenLayout[animals[i][0]][animals[i][1]] = Loot;
+								animals[i][5] = false;
+							}
+							willMove = false;
+						}
+					}
+					if(willMove)
+					{
+						if(screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].name === "notifier")
+						{
+							notify(screenLayout[playerX+deltaPlayerX][playerY+deltaPlayerY].whatToNotify);
+						}
+						oldPlayerX = playerX;
+						oldPlayerY = playerY;
+						playerX += deltaPlayerX;
+						playerY += deltaPlayerY;
+						if(nun.isActive && (deltaPlayerX != 0 || deltaPlayerY != 0))
+						{
+							nun.x = oldPlayerX;
+							nun.y = oldPlayerY;
+						}
+					}
+				}
+			}
+			function riddles(runCount)
+			{
+				if(runCount == 1)
+				{
+					if(prompt("guard: What are the first 10 digits of pi?") === "3.141592653")
+					{
+						notify("guard: you may pass through these ancient tunnels");
+						Temple.runCount++;
+						load_();
+					}
+					else
+					{
+						notify("guard: that is false.");
+					}
+				}
+				else
+				{
+					alert("CONGRATS YOU WON");
+					credits();
+					Temple.runCount = 1;
+					inventory.stuff = [[Empty]];
+					player.quests = [];
+				}
+			}
+			function obtain()
+			{
+				var object1 = screenLayout[playerX][playerY];
+				if(object1.name === "notifier" || object1.name === "empty")
+				{
+				//do nothing
+				}
+				else
+				{
+					screenLayout[playerX][playerY] = Empty;
+					inventory.add(1, object1);
+					if(object1.name == "rock")
+					{	
+						if(inventory.has(Rock) > 10)
+						{
+							notify("why do you need so many rocks?")
+						}
+					}
+				}
+			}
+			
+			function printScreen()
+			{
+				document.getElementById("screen").innerHTML = "";
+				for(var i=0; i<screenLayout.length; i++)
+				{
+					xyDisplayLoop: for(var j=0; j<screenLayout[i].length; j++)
+					{
+						if(i == playerX && j == playerY)
+						{
+							document.getElementById("screen").innerHTML += PLAYER;//display player
+						}
+						else if(i == nun.x && j == nun.y)
+						{
+							document.getElementById("screen").innerHTML += nun.symbol;//display nun
+						}
+						else
+						{
+							animalDisplayLoop: for(var k=0; k<animals.length; k++)
+						{
+							if(i == animals[k][0] && j == animals[k][1] && animals[k][5])
+							{
+								document.getElementById("screen").innerHTML += ANIMAL;//display animal
+								continue xyDisplayLoop;
+							}
+						}
+							document.getElementById("screen").innerHTML += screenLayout[i][j].symbol;
+						}
+					}
+					document.getElementById("screen").innerHTML += "\n";
+				}
+			}
+            function notify(notification1)
+			{
+				document.getElementById("notifications").innerHTML = notification1 + "</br>" + document.getElementById("notifications").innerHTML;
+			}
+           
+			function isPassable(x, y)
+			{
+				var a = screenLayout[x][y];
+				var toReturn = false;
+				if(a == Apple || a == Log || a == Rock || a == Empty || a == Loot)
+					toReturn = true;
+				if(x == playerX && y == playerY)
+					toReturn = false;
+				if(x == nun.x && y == nun.y)
+					toReturn = false;
+				for(var i=0; i<animals.length; i++)
+				{
+					if(x == animals[i][0] && y == animals[i][1] && animals[i][5])
+						toReturn = false;
+				}
+				return toReturn;
+			}
+			
+			function randomRockColor()
+			{
+				var colorR = Math.floor((Math.random() * 10) + 3); // random color between 3 and 12
+				var colorG = colorR + Math.floor((Math.random() * 7) - 3); //random color, rvalue +-3
+				var colorB = colorR + Math.floor((Math.random() * 7) - 3); //random color, rvalue +-3
+				if(colorR == 10) // convert high reds to hex
+					colorR = "A";
+				else if(colorR == 11)
+					colorR = "B";
+				else if(colorR == 12)
+					colorR = "C";
+				if(colorG == 10)// convert high greens to hex
+					colorG = "A";
+				else if(colorG == 11)
+					colorG = "B";
+				else if(colorG == 12)
+					colorG = "C";
+				else if(colorG == 13)
+					colorG = "D";
+				else if(colorG == 14)
+					colorG = "E";
+				else if(colorG == 15)
+					colorG = "F";
+				if(colorB == 10)// convert high blues to hex
+					colorB = "A";
+				else if(colorB == 11)
+					colorB = "B";
+				else if(colorB == 12)
+					colorB = "C";
+				else if(colorB == 13)
+					colorB = "D";
+				else if(colorB == 14)
+					colorB = "E";
+				else if(colorB == 15)
+					colorB = "F";
+				return "#"+colorR+colorG+colorB;
+			}
+			
+            function toggleMusic()
+            {
+				if(musicIsPlaying)
+				{
+					document.getElementById("music").pause();
+				}
+				else
+                {
+                    document.getElementById("music").play();
+                }
+                musicIsPlaying = !musicIsPlaying;
+            }
+			function credits()
+			{
+				document.getElementById("the-body").innerHTML += "<div id=\"credits\" style=\"background-color:rgb(0,0,0);border:4px solid black;font-family:'Share Tech Mono';position:fixed;top:16px;left:16px;height:400px;width:600px;z-index:80;overflow:hidden;\"></div>"
+				var theCredits = ["","","Thank you","for playing","","MORIC'S REVENGE","","","coded by Jacob Johnson","","","story by Jonah","","","Original game by Moric Developers","","","Original story by Jonah","","","Thank you to Mrs. Watts", "","","\"Pinball Spring 160\" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 License http://creativecommons.org/licenses/by/3.0/","","","ruff by Micah","","","purr by Kaylynn","","","belief by Lindsay","","","dank memes by Zach","","","bre by bre","","","two by fours","","","&copy;2016 nnnNNnnn.info","","","","","","","","","","","","","","","","","",""];
+				var creditTick = 0;
+				creditInterval = setInterval(
+					function()
+					{
+						document.getElementById("credits").style.backgroundColor = "rgb(" + Math.round(255*Math.random()) + "," + Math.round(255*Math.random()) + "," + Math.round(255*Math.random()) + ")";
+						document.getElementById("credits").innerHTML += "<span class=\"line\" style=\"position:absolute;top:400px;\">" + theCredits[creditTick] + "</span>";
+						for(var i=0; i<document.getElementById("credits").getElementsByClassName("line").length; i++)
+						{
+							document.getElementById("credits").getElementsByClassName("line")[i].style.top = (parseInt(document.getElementById("credits").getElementsByClassName("line")[i].style.top)-25) + "px";
+						}
+						creditTick++;
+						if(creditTick == theCredits.length)
+						{
+							clearInterval(creditInterval);
+							document.getElementById("the-body").removeChild(document.getElementById("credits"));
+							load_();
+						}
+					}, 750
+				);
+			}
+		</script>
+	</head>
+	<body id="the-body" style="background-color:#888;" onkeypress="key_(event);" onload="load__();">
+        <audio id="music" loop="loop"><source src="https://incompetech.com/music/royalty-free/mp3-preview2/Pinball%20Spring%20160.mp3" type="audio/mp3"/></audio>
+		<div id="container" style="width:632px;height:640px;background-color:#888;margin-left:auto;margin-right:auto;">
+			<h1 style="font-family:'Share Tech Mono';font-size:50;"><center>MORIC'S REVENGE ONLINE BETA <span id="version-number"></span></center></h1>
+			<center>
+				<div id="screen" style="font-family:VT323,monospace;font-size:37px;width:380px;height:450px;background-color:green;border:4px solid black;border-right:2px solid black;float:left"></div>
+			</center>
+			<div id="notifications"style="font-family:'Share Tech Mono';font-size:12px;width:240px;height:450px;background-color:#777;border:4px solid black;border-left:2px solid black;float:right;overflow:hidden;"></div>	
+			<div id="controls" style="width:632px;background-color:#888;float:left;">
+				<center>
+					<button style="font-family:'Share Tech Mono';color:#000;background-color:green;" onclick="toggleMusic();">TOGGLE MUSIC</button>
+					<button style="font-family:'Share Tech Mono';color:#000;background-color:green;" onclick="updateLog();">VIEW UPDATE LOG</button>
+					<button style="font-family:'Share Tech Mono';color:#000;background-color:green;" onclick="document.getElementById('buttons').style.display='block';">SHOW BUTTONS</button>
+				</center>
+			</div>
+			<h1 style="font-family:'Share Tech Mono';font-size:50;">&copy;2016 nnnNNnnn.info, moric developers</h1>
+			<center><!--<img src="http://simplehitcounter.com/hit.php?uid=2093877&f=16777215&b=0" border="0" height="18" width="83">--></center>
+		</div>	
+		<div id="buttons"style="position:fixed;bottom:0px;left:10%;width:80%;padding:.5%;display:none;background-color:black;">
+			<center>
+					<div id="hKey" style="width:15.5%;margin:.5%;float:left;background-color:green;" onclick="key__('h');" onload="document.getElementById('hKey').addEventListener('touchstart', function(e){e.preventDefault();key__('h');}, false);">
+						<svg height="100" width="100">
+							<polygon points="20,10 40,10 40,40 60,40 60,10 80,10 80,90 60,90 60,60 40,60 40,90 20,90" fill="black"/>
+						</svg>
+					</div>
+					<div id="xKey" style="width:15.5%;margin:.5%;float:left;background-color:green;" onclick="key__('x');" onload="document.getElementById('xKey').addEventListener('touchstart', function(e){e.preventDefault();key__('x');}, false);">
+						<svg height="100" width="100">
+							<polygon points="20,10 40,10 40,30 50,40 60,30 60,10 80,10 80,40 70,50 80,60 80,90 60,90 60,70 50,60 40,70 40,90 20,90 20,60 30,50 20,40" fill="black"/>
+
+						</svg>
+					</div>
+					<div id="uArrow" style="width:33%;margin:.5%;float:left;background-color:green;" onclick="key__('w');" onload="document.getElementById('uArrow').addEventListener('touchstart', function(e){e.preventDefault();key__('w');}, false);">
+						<svg height="100" width="100">
+							<polygon points="20,40 50,10 80,40 60,40 60,90 40,90 40,40" fill="black"/>
+						</svg>
+					</div>
+					<div id="fKey" style="width:15.5%;margin:.5%;float:left;background-color:green;" onclick="key__('f');" onload="document.getElementById('fKey').addEventListener('touchstart', function(e){e.preventDefault();key__('f');}, false);">
+						<svg height="100" width="100">
+							<polygon points="20,10 80,10 80,30 40,30 40,40 60,40 60,60 40,60 40,90 20,90" fill="black"/>
+						</svg>					
+					</div>
+					<div id="eKey" style="width:15.5%;margin:.5%;float:left;background-color:green;" onclick="key__('e');key__('q');" onload="document.getElementById('eKey').addEventListener('touchstart', function(e){e.preventDefault();key__('e');key__('q');}, false);">
+						<svg height="100" width="100">
+							<polygon points="20,10 80,10 80,30 40,30 40,40 60,40 60,60 40,60 40,70 80,70 80,90 20,90" fill="black"/>
+						</svg>
+					</div>
+					<div id="lArrow" style="width:32%;margin:.5%;background-color:green;float:left;" onclick="key__('a');" onload="document.getElementById('lArrow').addEventListener('touchstart', function(e){e.preventDefault();key__('a');}, false);">
+						<svg height="100" width="100">
+							<polygon points="10,50 40,20 40,40 90,40 90,60 40,60 40,80" fill="black"/>
+						</svg>
+					</div>
+					<div id="dArrow" style="width:33%;margin:.5%;background-color:green;float:left;" onclick="key__('s');" onload="document.getElementById('dArrow').addEventListener('touchstart', function(e){e.preventDefault();key__('s');}, false);">
+						<svg height="100" width="100">
+							<polygon points="20,60 50,90 80,60 60,60 60,10 40,10 40,60" fill="black"/>
+						</svg>
+					</div>
+					<div id="rArrow" style="width:32%;margin:.5%;background-color:green;float:left;" onclick="key__('d');" onload="document.getElementById('rArrow').addEventListener('touchstart', function(e){e.preventDefault();key__('d');}, false);">
+						<svg height="100" width="100">
+							<polygon points="90,50 60,20 60,40 10,40 10,60 60,60 60,80" fill="black"/>
+						</svg>
+					</div>
+			</center>
+		</div>
+	</body>
+</html>

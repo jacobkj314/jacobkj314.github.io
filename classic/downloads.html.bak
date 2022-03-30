@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <meta name="description" content="nnnNNnnn.info homepage">
+		<meta name="keywords" content="nnnNNnnn,Moric Developers">
+		<meta name="author" content="Jacob Johnson">
+		<title>nnnNNnnn.info-"The best website on the internet"</title>
+        <link href="nnnNNnnn.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+        <audio src="http://moricdevelopers.info/files/orchestra-ftl.wav" autoplay="autoplay"></audio>
+    	<div class="container">
+        	<header>
+            	<img src="images/nnnnnnnn.png" style="float:right;" alt="our logo" title="our logo"/>
+                <h1>nnnNNnnn.info</h1>
+            </header>
+            <div class="main">
+            	<nav>
+                	<ul>
+                    	<li><a href="index.html">HOME</a></li>
+                    </ul>
+                </nav>
+                <div class="article">
+                	<h2><a href="https://docs.google.com/uc?export=download&confirm=OA_-&id=0B64yky1xGnt3c2ozWXZUTHBFamM" >MORIC'S REVENGE</a></h2>
+                        <p>This is the original Moric Developers Game!!! Download here for fun 2 the max!!!!</p>
+                        <br/>
+                        <h2><a href="404.html" >COMING SOON</a></h2>
+                        <p>Another Moric Developers Game!!! More fun 2 the max coming soon!!!!</p>
+                </div>
+                
+            </div><!--main orange div-->
+            <footer>
+            	<center><p>&copy;2016 nnnNNnnn.info</p></center>
+                <center><p>contact us on twitter:</p><a href="http://www.twitter.com/nnnNNnnn_info">@nnnNNnnn_info</a></center>
+                <center><p>*disclaimer we don't actually own google</p></center>
+            </footer>
+        </div>
+	</body>
+</html>

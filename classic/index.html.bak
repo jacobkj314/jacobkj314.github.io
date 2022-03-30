@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <meta name="description" content="nnnNNnnn.info homepage">
+		<meta name="keywords" content="nnnNNnnn,Moric Developers">
+		<meta name="author" content="Jacob Johnson">
+		<title>nnnNNnnn.info-"The best website on the internet"</title>
+        <style>
+                ::selection{
+                                color:#A2A2DF;
+                                background-color:#9292CF
+                        }
+			body{
+				background-color:#2D2D5F;
+				background-image:url('./images/back.png');
+				font-family:monospace;
+				font-size:12px;
+				color:#5D5D9F;
+			}
+			header{
+				background-color:#1C1A6E;
+				width:900px;
+				height:200px;	
+				float:left;
+			}
+			nav{
+				background-color:#3E2D8F;
+				float:left;
+				width:300px;
+				height:800px;
+			}
+			footer{
+				height:200px;
+				width:900px;
+				background-color:#2D3E7F;
+				float:left;
+			}
+			h1{
+				font-family:monospace;
+				color:#6D6D9F;
+				font-size:70px;
+				padding-top:42px;
+			}
+			h2{
+				font-size:20px;
+				margin-bottom:6px;
+			}
+			.container{
+				background-color:#000;
+				width:900px;
+				height:1200px;
+				margin-top:64px;
+				margin-bottom:62px;
+				margin-right:auto;
+				margin-left:auto;
+				border:4px solid #0D0D3F;
+			}
+			.main{
+				background-color:blue;
+				height:800px;
+				width:900px;
+				float:left;
+			}
+			.article{
+				background-color:#2D2D7F;
+				float:left;
+				height:792px;
+				width:592px;
+				padding:4px;
+			}
+			a:link{
+				font-family:monospace;
+				color:#8D8DAF;
+			}
+			a:visited{
+				font-family:monospace;
+				color:#7D7D9F;
+			}
+			a:hover{
+				font-family:monospace;
+				color:#6D6D9F;
+				font-size:18px;
+			}
+			a:active{
+				font-family:monospace;
+				color:#5D5D8F;
+			}
+			li{
+				font-size:16px;
+			}
+			.sale{
+				background-color:#2D2D7F;
+				width:100%;
+				height:20%;
+				float:right;
+			}
+			img{
+				margin-right:4px;
+				margin-left:4px;
+			
+				margin-bottom:2px;
+			}
+			p{
+				font-size:15px;
+				margin-top:6px;
+			}
+        </style>
+        <script>
+                scrubCount = .97;
+                believeVar = .97;
+                swagMoney= 2000;
+                function happyBirthday()
+                {
+                        var today = new Date();
+var dateNum = 0;
+var bName = "";
+for(var i=0; i<today.getMonth(); i++)
+{
+	if(i===0)
+		dateNum+=31;
+	else if(i===1)
+		dateNum+=28;
+	else if(i===2)
+		dateNum+=31;
+	else if(i===3)
+		dateNum+=30;
+	else if(i===4)
+		dateNum+=31;
+	else if(i===5)
+		dateNum+=30;
+	else if(i===6)
+		dateNum+=31;
+	else if(i===7)
+		dateNum+=31;
+	else if(i===8)
+		dateNum+=30;
+	else if(i===9)		
+		dateNum+=31;
+	else if(i===10)
+		dateNum+=30;
+}
+dateNum+=today.getDate();
+
+if(dateNum <15)
+	bName = "Lindsay";
+else if(dateNum <33)
+	bName = "Micah";
+else if(dateNum <40)
+	bName = "Ayla";
+else if(dateNum <60)
+	bName = "Ian";
+else if(dateNum <77)
+	bName = "Jacob";
+else if(dateNum <100)
+	bName = "Daniel";
+else if(dateNum <120)
+	bName = "Jonah";
+else if(dateNum <143)
+	bName = "Megan";
+else if(dateNum <168)
+	bName = "Kaylynn";
+else if(dateNum <185)
+	bName = "Zach";
+else if(dateNum <244)
+	bName = "AMERICA";
+else if(dateNum <247)
+	bName = "Celeste";
+else if(dateNum <249)
+	bName = "Chsndlr";
+else if(dateNum <291)
+	bName = "Veronica";
+else
+	bName = "Lindsay";
+if(today.getMonth() === 1 && today.getDate === 29)
+	bName = "Ian";	
+//alert("Happy Birthday "+bName+"!");
+                }
+                function scrub()
+                {
+                        //swagYoloMoney()
+                        if(document.getElementById("scrub").innerHTML == "Click")
+                        {
+                                document.getElementById("scrub").innerHTML = "Here";
+                        }
+                        else if(document.getElementById("scrub").innerHTML == "Here")
+                        {
+                                document.getElementById("scrub").innerHTML = "To";
+                        }
+                        else if(document.getElementById("scrub").innerHTML == "To")
+                        {
+                                document.getElementById("scrub").innerHTML = "Deal";
+                        }
+                        else if(document.getElementById("scrub").innerHTML == "Deal")
+                        {
+                                document.getElementById("scrub").innerHTML = "With";
+                        }
+                        else if(document.getElementById("scrub").innerHTML == "With")
+                        {
+                                document.getElementById("scrub").innerHTML = "It";
+                        }
+                        else if(document.getElementById("scrub").innerHTML == "It")
+                        {
+                                window.alert("DEAL WITH IT");
+                                document.getElementById("scrub").innerHTML = "Click";
+                        }
+                        if(scrubCount > .05)
+                        {
+                                scrubCount -=.01;
+                        }
+                        
+                }
+                function changeImage()
+                {
+                        //if(document.getElementById("logo").getAttribute("src") != "images/doge.png")
+                        //{
+                        //        if(Math.random() > scrubCount)
+                       //                 document.getElementById("logo").setAttribute("src", "images/doge.png");
+                       // }
+                       // else{
+                       //         document.getElementById("logo").setAttribute("src", "images/nnnnnnnn.png");
+                       // }
+                }
+                function believe()
+                {
+                        if(Math.random() > believeVar)
+                        {
+                                window.alert("Believe in yourself")
+                        }
+                }
+                function believeIncrease()
+                {
+                        if(believeVar > .01)
+                        {
+                                believeVar -=.02;
+                        }
+                }
+                function google()
+                {
+                        window.open("https://www.google.com","_self",true);
+                }
+                function addMoney()
+                {
+                        document.getElementById("moneyspan").innerHTML = swagMoney;
+                        swagMoney++;
+                        if(swagMoney > 9000)
+                        {
+                                document.getElementById("over9000").innerHTML = "OVER NINE THOUSAND";
+                        }
+                }
+                function swagYoloMoney()
+                {
+                        if((document.getElementById("us").innerHTML == "yolo") && (document.getElementById("employees2").innerHTML == "swag money"))
+                        {
+                        }
+                }
+                function rave()
+                {
+                       if(doRave)
+                       {
+                               //document.getElementById("article").style.backgroundColor = "black";       srcx="https://www.googledrive.com/host/0B64yky1xGnt3TWxwUTd6S1B2Rk0" 
+                       }
+                }
+        </script>
+	</head>
+	<body onload="happyBirthday();">
+
+
+    	<div class="container">
+        	<header>
+                
+				<img id ="logo" src="./images/nlogo.png" style="height:100%;float:right;" alt="our logo" title="our logo" />
+				<h1>nnnNNnnn.info</h1>
+            </header>
+            <div class="main">
+            	<nav>
+                    <ul>
+                    	<li><a href="#n">nnnNNnnn.info</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#employees">Our Employees</a></li>
+                        <li><a href="downloads.html">DOWNLOADS</a></li>
+						<li><a href="morics-revenge.html">MORICS REVENGE</a></li>
+						<li><a href="soviet-rush.html">SOVIET RUSH</a></li>
+						<li><a href="pong.html">PONG</a></li>
+						<li><a href="circle-generator.html">CIRLCLE GENERATOR</a></li>
+                                                <li><a href="/minesweeper/index.html">MINESWEEPER</a></li>
+                    </ul>
+                </nav>
+                <div class="article" id="article">
+                        <h2><a href="morics-revenge.html">PLAY MORIC'S REVENGE ONLINE!!!</a></h2>
+                        <h2><a href="/minesweeper/index.html">PLAY MINESWEEPER</a></h2>
+                	<a id="n"></a>
+                	<center><h2>nnnNNnnn.info</h2></center>
+                	<p>
+                		nnnNNnnn.info is a non-profit macroorganization comprised of several smaller organizations, most notably, Moric Developers, founded in 2014 and now employs over 6 people throughout the Salt Lake Valley. In addition, nnnNNnnn holds ownership of nnnNNnnn publishing, nnnNNnnn animation, the nnnNNnnn "Doubles and Developers" conference, as well as the nnnNNnnn servers. As of 2016, the Steam holdings of nnnNNnnn total <span id="over9000">approximately $<span id="moneyspan" onmousemove="addMoney()">2000</span></span>. This website has been registered since 2015.
+                	</p>
+                    <a id="about"></a>
+                	<center><h2>About <span id="us" contenteditable="true" spellcheck="false">Us</span></h2></center>
+                	<p>
+                		We develop things, mainly software, through our sub-company Moric Developers. We also put bread in toasters to make toast. We also make puns. We create opportunities to have fun in our community, which is super helpful, you know. "We create interest for people who have a lot of money," says Zach Jamison, Former President of Moric Developers. We also created this Website. I created our logo, in paint. I also had to use Photoshop to add the transparency, since paint doesn't support transparency. But I mostly used paint. As you can see we create many things. Also, please use our internet search services at www.gogal.com, free of charge*
+                	</p>
+                    <a id="employees"></a>
+                	<center><h2>Our <span id="employees2" contenteditable="true" spellcheck="false">Employees</span></h2></center>
+                	<p>
+                	Jacob-President
+                        <br/>
+                        Daniel-Vice President
+                        <br/>
+                        Jonah-Story Developer
+                        <br/>
+                        Zach-Main Programmer
+                        <br/>
+                        Chandler-Programmer
+                        <br/>
+                        Veronica-Programmer
+                        <br/>
+                        Megan-Programmer
+                        <br/>
+                        <span onmouseover="believe()">Lindsay</span>-<span onmouseover="believeIncrease()">Programmer</span>
+                        <br/>
+                        Kaylynn-Programmer
+                        <br/>
+                        <button id="scrub" onclick="scrub()">Click</button>
+                </div>
+                
+            </div><!--main orange div-->
+            <footer>
+            	<center><p>&copy;2016 nnnNNnnn.info</p></center>
+                <center><p>contact us on twitter:</p><a href="/web/20160306084728/http://www.twitter.com/nnnNNnnn_info">@nnnNNnnn_info</a></center>
+                <center><p>*disclaimer we don't actually own <span onmouseover="google()">google</span></p></center>
+                <center><script type="text/javascript" src="/web/20160306084728js_/http://counter10.fcs.ovh/private/counter.js?c=363e058175dfb0762e2cb1a1b683a398"></script></center>
+            </footer>
+        </div>
+	</body>
+</html>
+
