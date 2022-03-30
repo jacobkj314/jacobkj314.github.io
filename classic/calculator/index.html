@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+	<head>
+		<script>
+			function init()
+            {    
+            }
+            
+            
+            
+            function button1()
+            {
+                var a = parseFloat( document.getElementById("one").value);
+                var b = parseFloat(document.getElementById("two").value);
+                print(a + "+" + b + "=" + (a+b));
+            }
+            
+            
+			function print(x)
+			{
+				document.getElementById("theBody").innerHTML += x + "</br>";
+			}
+		</script>
+	</head>
+	<body id="theBody"onload="init()";>
+        <h2>ADDITION CALCULATOR</h2>
+        <input id="one"/>
+        <input id="two"/>
+        <button id="felipe" onclick ="button1();">ADD</button>
+        <br/>
+	</body>
+</html>

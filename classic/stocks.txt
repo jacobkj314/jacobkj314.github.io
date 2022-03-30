@@ -1,0 +1,48 @@
+nnnNNnnn.info stock registry and procedures
+revision 0001: April 13th, 2016
+by Jacob Johnson, president of nnnNNnnn.info stock management council
+REGISTRY:
+issue number,		stock number,		original owner,		date of original issue;
+#
+00000000,		00000000,		nnnNNnnn.info,		2-28-15;		
+#
+PROCEDURES:
+I. amount of stocks
+	*One initial stock will be created and kept in the possesion of nnnNNnnn.info itself
+	*90 stocks will be created in the remainder of 2016
+	*up to 90 stocks will be created in every subsequent year
+II. creation of 2016 stocks
+	*Four founding members of nnnNNnnn.info will recieve at least five stocks each
+	*The ten other members will recieve at least one stock each
+	*All stock-eligible donations recieved by November 1st, 2016 will be totaled and the remaining 60 stocks will be divided proportionally among donators
+		*all donations within this timeframe are stock-eligible
+		*these stocks will be distributed before December 31st, 2016
+III. creation of stocks during subsequent years
+	*All stock-eligible donations recieved by the last day of any month will be totaled and stocks will be registered by the end of the following month
+		*up to 10 stocks will be created per month
+		*no stock will be awarded for any donation less than $1.00
+		*if all 10 stocks are awarded every month for January through September, no stocks will be awarded during October through December.
+			*if not all 10 stocks are awarded, these stocks may be awarded during these months
+	*All stocks created during a year will be distributed by the end of that year
+		*excepted for stocks created during December, these stocks will be distributed by the end of January of the following year
+IV. registration of stocks
+	*All stocks issued will be recorded in an online registry of stocks
+		*this registry will be visible to the public, along with this list of regulations
+	*Each stock will be registered with an issue number, a stock number, the original owner, and the date of original issue
+		*the issue number will be an eight-digit number that records the order the stocks were issued in, starting at 00000000 and continuing upward
+			*stocks issued at the same time will be numbered in reverse alphabetical order by last name
+		*the stock number is a separate eight-digit number that will be decided by the person to whom the stock is issued
+			*these numbers are not allowed to repeat
+V. distribution of stocks
+	*All stock owners will recieve a card including the issue number, the stock number, the date of original issue, their name and signature, the signature of the president of the nnnNNnnn.info stock management council, and the official nnnNNnnn.info logo
+		*if one person is awarded multiple stocks at the same time, they can be put in the same card, which must still include the range of issue numbers and must list all the stock numbers
+VI. trade of stocks
+	*All stock owners are allowed to trade stocks with each other, but they must consult the registry
+		*the registry will be updated within one year of the transaction
+VII. value of stocks
+	*The total of all the stocks is equal to one half the value of nnnNNnnn.info
+IX. disclaimer
+	*These stocks aren't really ever going to increase in value
+		*basically you are all just giving donations so we can keep the domain-name hosting and keep our website online
+			*but we thought "hey, why ask for free money when we could offer you a cool certificate card?"
+				*so yeah that's basically the situation

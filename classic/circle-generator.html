@@ -1,0 +1,46 @@
+<!doctype html>
+<html manifest="appcache-manifest/circle-generator.appcache">
+	<head>
+		<script>
+			var isRunning = false;
+			function a()
+			{
+				if(!isRunning)
+				{
+					isRunning = true;
+					var i = 0;
+					var j = 2*Math.PI*Math.random();
+					var ticks = document.getElementById("input1").value;
+					if(ticks<3)
+						ticks = 3;
+					if(ticks>360)
+						ticks = 360;
+					document.getElementById("svg1").innerHTML = "";
+					drawCircle = setInterval
+					(
+						function()
+						{
+							document.getElementById("svg1").innerHTML += "<polygon points=\"250,250 "+(250+240*Math.cos(i))+","+(250-240*Math.sin(i))+" "+(250+240*Math.cos(i+Math.PI/(.5*ticks)))+","+(250-240*Math.sin(i+Math.PI/(.5*ticks)))+"\" style=\"stroke-width:.26;fill:rgb(" + Math.round(127.5+127.5*(Math.sin(i+j))) + "," + Math.round(127.5+127.5*(Math.sin(i+j + 2/3*Math.PI))) + "," + Math.round(127.5+127.5*(Math.sin(i+j + 4/3*Math.PI))) + ");stroke:rgb(" + Math.round(127.5+127.5*(Math.sin(i+j))) + "," + Math.round(127.5+127.5*(Math.sin(i+j + 2/3*Math.PI))) + "," + Math.round(127.5+127.5*(Math.sin(i+j + 4/3*Math.PI))) + ");\"/>";
+							i+=Math.PI/(.5*ticks);
+							if(i >= 2*Math.PI)
+							{
+								clearInterval(drawCircle);
+								isRunning = false;
+							}
+						},100/Math.log(ticks)
+					)
+				}
+			}
+		</script>
+	</head>
+	<body style="background-color:black;color:white;" id="theBody" >
+		<center>
+			<h1>CIRCLE GENERATOR</h1>
+			<svg id="svg1" height="500" width="500">
+				<rect x="0" y="0" width="1000" height="1000" style="fill:black;"/>
+			</svg>
+			<br/>
+			number of sides:<input id="input1" type="number" min="3" max="360" value="9"/><button onclick="a();">GO</button>
+		</center>
+	</body>
+</html>

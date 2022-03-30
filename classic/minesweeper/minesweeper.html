@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<style>
+			table, th, td 
+			{
+				border: 1px solid black;
+				cursor:default;
+			}
+			::selection
+			{
+				background-color: rgba(0,0,0,0);
+			}
+		</style>
+		<script>
+			window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+			function init()
+			{
+				alive=true;
+				win=false;
+				firstClick = true;
+				dim = 10;//dimensions of square grid
+				a = new Array(dim+2);
+				for(var i=0;i<=dim+1;i++)//creating array
+				{
+					a[i] = new Array(dim+2);
+				}
+				for(var i=0;i<=dim+1;i++)//creating cells... 
+				{
+					for(var j=0;j<=dim+1;j++)
+					{
+						a[i][j] = new Array(4);//...with 4 variables
+						a[i][j][0] = false;//variable 0 is visibility
+						a[i][j][2] = false;//variable 2 is whether it is flagged
+						a[i][j][3] = 0;//variable 3 is how many times the cell has been discovered for autoclear
+					}
+				}
+				for(var i=0;i<=dim+1;i++)//filling false in all positions
+				{
+					for(var j=0;j<=dim+1;j++)
+					{
+						a[i][j][1] = false;//variable 1 is whether it is a bomb or not
+					}
+				}
+				for(var i=1;i<=dim;i++)//adding random true values to inner positions
+				{
+					for(var j=1;j<=dim;j++)
+					{
+						if(Math.random() < .12)
+						{
+							a[i][j][1] = true;
+						}
+					}
+				}
+				print();
+				for(var i=1;i<=dim;i++)
+				{
+					for(var j=1;j<=dim;j++)
+					{
+						//neighborCount(i,j);
+					}
+				}
+				document.getElementById("face").innerHTML = "Minesweeper <span style='color:yellow'>:)</span>";
+			}
+			function print()
+			{
+				document.getElementById("game").innerHTML = "";//reset
+				for(var i=1;i<=dim;i++)///printing to screen pt i
+				{
+					document.getElementById("game").innerHTML += "<tr id='row"+i+"',></tr>";
+					for(var j=1;j<=dim;j++)
+					{
+						document.getElementById("row"+i).innerHTML += "<td id='row"+i+"col"+j+"' onClick='runClick("+i+","+j+");' onContextMenu='flag("+i+","+j+");',></td>";
+					}
+				}
+				for(var i=1;i<=dim;i++)///printing to screen pt ii
+				{
+					for(var j=1;j<=dim;j++)
+					{
+						var toSet = " ";
+						var toColor="white";
+						var toTextColor = "black";
+						if(a[i][j][2])//if it is flagged
+						{
+							toSet="F";
+							toColor="orange";
+						}
+						else
+						{
+							if(!a[i][j][0])//if it is invisible
+							{
+								toSet="?";
+								toColor="gray";
+							}
+							else
+							{
+								if(a[i][j][1])//if it is a bomb
+								{
+									toSet = "X";
+									if(!win)
+									{
+										toColor="red";
+									}
+									else
+									{
+										toColor="darkgreen";
+									}
+								}
+								else
+								{
+									toSet = "" + neighborCount(i,j);
+									toColor="darkgray";
+									if(neighborCount(i,j)===0)
+									{
+										toSet="&nbsp;&nbsp;";
+										toColor="lightgray";
+									}
+									else if(neighborCount(i,j)===1)
+									{
+										toTextColor = "blue";
+									}
+									else if(neighborCount(i,j)===2)
+									{
+										toTextColor = "green";
+									}
+									else if(neighborCount(i,j)===3)
+									{
+										toTextColor = "red";
+									}
+									else if(neighborCount(i,j)===4)
+									{
+										toTextColor = "purple";
+									}
+									else if(neighborCount(i,j)===5)
+									{
+										toTextColor = "maroon";
+									}
+									else if(neighborCount(i,j)===6)
+									{
+										toTextColor = "darkturquoise";
+									}
+									else if(neighborCount(i,j)===7)
+									{
+										toTextColor = "black";
+									}
+									else if(neighborCount(i,j)===8)
+									{
+										toTextColor = "darkgray";
+									}
+								}
+							}
+						}
+						document.getElementById("row"+i+"col"+j).innerHTML = toSet;
+						document.getElementById("row"+i+"col"+j).setAttribute("bgcolor", toColor);
+						document.getElementById("row"+i+"col"+j).setAttribute("style", "color:"+toTextColor);
+					}
+				}
+			}
+			function neighborCount(x,y)
+			{
+				var toReturn = 0;
+				if(x<1 || x>dim || y<0 || y>dim)
+				{
+					toReturn = 9;//this shouldnt happen
+				}
+				else
+				{
+					for(var i=-1;i<=1;i++)
+					{
+						for(var j=-1;j<=1;j++)
+						{
+							if(a[x+i][y+j][1])
+							{
+								toReturn++;
+							}
+						}
+					}
+					if(a[x][y][1])
+					{
+						toReturn--;
+					}
+				}
+				return toReturn;
+			}
+			function runClick(x,y)
+			{
+				if(firstClick)
+				{
+					firstClick = false;
+					for(var i=-1;i<=1;i++)
+					{
+						for(var j=-1;j<=1;j++)
+						{
+							a[x+i][y+j][1] = false;
+							//clearAround(x,y);
+						}
+					}
+				}
+				if(!alive || a[x][y][0] || a[x][y][2])//when you already died, or already clicked on that cell, or is flagged, nothing happens
+				{}
+				else
+				{
+					if(a[x][y][1])//if you click on a bomb, you die
+					{
+						document.getElementById("face").innerHTML = "Game Over <span style='color:yellow' onClick='init();'>:(</span>";
+						alive = false;
+						for(var i=1;i<=dim;i++)//making all bombs visible
+						{
+							for(var j=1;j<=dim;j++)
+							{
+								if(!a[i][j][0] && a[i][j][1])
+								{
+									a[i][j][0] = true;
+								}
+							}
+						}
+					}
+					else//if it has no neighbors, clear around that cell
+					{
+						if(neighborCount(x,y) === 0)
+						{
+							clearAround(x,y);
+						}
+					}
+					a[x][y][0] = true;//either way, the cell becomes visible
+					
+				}
+				var canWin = true;
+				for(var i=1;i<=dim;i++)//checking for a win
+				{
+					for(var j=1;j<=dim;j++)
+					{
+						if(!((a[i][j][1] && (!a[i][j][0] || a[i][j][2])) || (!a[i][j][1] && a[i][j][0])))//!if its a bomb and not visible or flagged, or isnt a bomb and is visible
+						{
+							canWin = false;
+						}
+					}
+				}
+				if(canWin)
+				{
+					alive = false;
+					win = true;
+					for(var i=1;i<=dim;i++)//making all bombs visible
+					{
+						for(var j=1;j<=dim;j++)
+						{
+							if(!a[i][j][0])
+							{
+								a[i][j][0] = true;//make visible
+								a[i][j][2] = false;//unflag
+							}
+						}
+					}
+					document.getElementById("face").innerHTML = "You Win <span style='color:yellow' onClick='init();'>:D</span>";
+				}
+				print();//and the screen updates
+			}
+			function flag(x,y)
+			{
+				a[x][y][2] = !a[x][y][2];//toggle flag state
+				print();
+			}
+			function clearAround(x,y)
+			{
+				if(!a[x][y][0])//if the starting cell is not already visible
+				{
+					for(var i=-1;i<=1;i++)
+					{
+						for(var j=-1;j<=1;j++)
+						{
+							if(!a[x+i][y+j][1] && x+i>0 && y+j>0 && x+i<=dim && y+j<=dim)//if the cell that is getting checked is not a bomb and not off the grid...
+							{
+								a[x+i][y+j][3]++;//...it will become visible
+								if(neighborCount(x+i,y+j)===0 && a[x+i][y+j][3]<2)//if the cell has no neighbors and hasnt already been discovered twice...
+								{
+									clearAround(x+i,y+j);//...run autoclear around it
+								}
+							}
+						}
+					}
+					for(var i=1;i<=dim;i++)//making all bombs visible
+					{
+						for(var j=1;j<=dim;j++)
+						{
+							if(a[i][j][3] > 0)
+							{
+								a[i][j][3] = 0;
+								a[i][j][0] = true;
+							}
+						}
+					}
+				}
+			}
+		</script>
+	</head>
+	<body id="body" style="background:lightgray;font-size:40px;" onLoad="init();">
+			<h4 id="face">></h4>
+			<table id="game"></table>
+			<span style="font-size:11px;">&copy;2017 nnnNNnnn.info</span>
+	</body>
+</html>

@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SOVIET RUSH</title>
+		<link rel="stylesheet" type="text/css" href="https://www.tinyurl.com/16777216-russianfont"/>
+		<meta name="author" value="Jacob Johnson"/>
+		<meta name="description" value="Soviet Rush, the worlds best communism-themed game."/>
+		<meta name="keywords" value="soviet, rush, soviet rush, russia, soviet russia, communism, communism game, moric, moric developers, nnnNNnnn, nnnNNnnn.info"/>
+		<script>
+			function Coin(toPosX, toPosY)//class coin
+			{
+				this.coinNum = Coin.count;
+				this.svgRender = "<circle fill=\"orange\" cy=\"25\" cx=\"25\" r=\"9\"/>"
+					+"<text x=\"20\" y=\"31\" font-family=\"sans-serif\" font-size=\"16px\" fill=\"red\">&#x20bd</text>";
+				this.getSvgCode = function()
+				{
+					return "<svg style=\"position:absolute;top:" + this.posY + "px;left:" + this.posX + "px;z-index:11;\" height=\"50px\" width=\"50px\">" + this.svgRender + "</svg>";
+				}
+				this.move = function(toDeltaX, toDeltaY)
+				{
+					this.posX += toDeltaX;
+					this.posY += toDeltaY;
+					document.getElementById("coin" + this.coinNum).innerHTML = this.getSvgCode();
+					
+				}
+				this.posX = toPosX%350;
+				this.posY = toPosY%450;
+				document.getElementById("coinSpan").innerHTML += "<span id=\"coin"  + this.coinNum + "\">" + this.getSvgCode() + "</span>";
+				Coin.count++;
+			}
+			Coin.count = 0;
+			
+			coinManager = 
+			{
+				stuff: [],
+				addRandom: function()
+				{
+					var coin1 = new Coin(350*Math.random(), 450*Math.random());
+					var moveCoins = setInterval(
+						function()
+						{
+							if(coin1.posY > 500)
+							{
+								clearInterval(moveCoins);
+								document.getElementById("coinSpan").removeChild(document.getElementById("coin" + coin1.coinNum));
+								coin1 = null;
+							}
+							else if(Math.abs(player.posX-coin1.posX) < 16 && Math.abs(player.posY-coin1.posY) < 16)
+							{
+								clearInterval(moveCoins);
+								document.getElementById("coinSpan").removeChild(document.getElementById("coin" + coin1.coinNum));
+                                score++;
+                                document.getElementById("scoreSpan").innerHTML = score;
+								coin1 = null;
+							}
+							else
+							{
+								coin1.move(0,1);
+							}
+						},
+					16);
+					this.stuff[this.stuff.length] = coin1;
+				}
+			}
+			function load()
+			{
+                                document.getElementById("game").addEventListener("touchstart", startMove, false);
+                                document.getElementById("game").addEventListener("touchmove", continueMove, false);
+                                document.getElementById("game").addEventListener("touchend", endMove, false);
+				player = 
+				{
+					posX: 1,
+					posY: 1,
+					velX: 0,
+					velY: 0,
+					svgRender: "<rect fill=\"green\" width=\"50\" height=\"50\"/>" +
+					"<circle fill=\"blue\" cy=\"15\" cx=\"15\" r=\"10\"/>" +
+					"<circle fill=\"purple\" cy=\"20\" cx=\"20\" r=\"10\"/>",
+					getSvgCode: function()
+					{
+						return "<svg style=\"position:absolute;top:" + this.posY + "px;left:" + this.posX + "px;z-index:12;\" height=\"50px\" width=\"50px\">" + this.svgRender + "</svg>"
+					},
+					vx: function(num)
+					{
+						this.velX = num;
+					},
+					vy: function(num)
+					{
+						this.velY = num;
+					},
+					x: function()
+					{
+						if(this.posX+2*this.velX >= 0 && this.posX+2*this.velX <= 350)
+						{
+							if(this.velY == 0)
+								this.posX += 2*this.velX;
+							else
+								this.posX += Math.sqrt(2)*this.velX;
+						}
+						this.checkAndUpdate();
+					},
+					y: function()
+					{
+						if(this.posY+2*this.velY >= 0 && this.posY+2*this.velY <= 450)
+						{
+							if(this.velX == 0)
+								this.posY += 2*this.velY;
+							else
+								this.posY += Math.sqrt(2)*this.velY;
+						}
+						this.checkAndUpdate();
+					},
+					checkAndUpdate: function()
+					{
+						document.getElementById("playerSpan").innerHTML = this.getSvgCode();
+					},
+					
+				};
+                                if(localStorage.score == null || localStorage.score == "")
+                                {
+                                        score = 0;
+                                }
+                                else
+                                {
+                                        score = localStorage.score;
+										document.getElementById("scoreSpan").innerHTML = score;
+                                        player.posX = parseInt(localStorage.x);
+                                        player.posY = parseInt(localStorage.y);
+                                }
+				document.getElementById("playerSpan").innerHTML = player.getSvgCode();//draws player
+				setInterval(function(){player.x();player.y();}, 16);//animates player
+				
+				setInterval(function(){coinManager.addRandom();},1234);
+			}
+			function key(e)
+			{
+				key_(String.fromCharCode(e.which));
+			}
+			function key_(key1)
+			{
+				if(key1 == "D")
+				{
+					player.vx(1);
+				}
+				else if(key1 == "A")
+				{
+					player.vx(-1);
+				}
+				else if(key1 == "W")
+				{
+					player.vy(-1);
+				}
+				else if(key1 == "S")
+				{
+					player.vy(1);
+				}
+				else if(key1 == "L")
+				{
+					coinManager.addRandom();
+				}
+			}
+			function keyOff(e)
+			{
+				keyOff_(String.fromCharCode(e.which));
+			}
+			function keyOff_(key1)
+			{
+				if(key1 == "D")
+				{
+					player.vx(0);
+				}
+				else if(key1 == "A")
+				{
+					player.vx(0);
+				}
+				else if(key1 == "W")
+				{
+					player.vy(0);
+				}
+				else if(key1 == "S")
+				{
+					player.vy(0);
+				}
+			}
+                        //start touch controls
+                        function startMove(e)
+                        {
+							e.preventDefault();
+							var touchX = e.changedTouches[0].pageX - 412;
+							var touchY = e.changedTouches[0].pageY - 80;
+							var playerX = player.posX + 25;
+							var playerY = player.posY + 25;
+							if(touchX > playerX)
+								key_("D");
+							else 
+								key_("A");
+							if(touchY < playerY)
+								key_("W");
+							else	
+								key_("S");
+							if(Math.abs(touchX-playerX) < 10)
+								keyOff_("A");
+							if(Math.abs(touchY-playerY) < 10)
+								keyOff_("W");
+                        }
+                        function continueMove(e)
+                        {
+							e.preventDefault();
+							var touchX = e.changedTouches[0].pageX - 412;
+							var touchY = e.changedTouches[0].pageY - 80;
+							var playerX = player.posX + 25;
+							var playerY = player.posY + 25;
+							if(touchX > playerX)
+								key_("D");
+							else 
+								key_("A");
+							if(touchY < playerY)
+								key_("W");
+							else	
+								key_("S");
+							if(Math.abs(touchX-playerX) < 25)
+								keyOff_("A");
+							if(Math.abs(touchY-playerY) < 25)
+								keyOff_("W");
+                        }
+                        function endMove(e)
+                        {
+							e.preventDefault();
+							keyOff_("A");
+							keyOff_("W");
+                        }
+		</script>
+	</head>
+	<body style="background-color:#c00;font-family:russian;" onload="load();" onkeydown="key(event);" onkeyup="keyOff(event)" onunload="localStorage.score=score; localStorage.x=player.posX; localStorage.y=player.posY;"> 
+		<svg version="1.1" width="600" height="600" id="backgroundflag" style="position:absolute;left:0px;top:0px;">
+			<rect fill="#c00" width="600" height="600" id="rect4" />
+			<path fill="#ffd700" d="m 191.6,61.4 -27,0 21.8,16 -8.2,25.6 21.8,-15.8 21.8,15.8 -8.2,-25.6 21.8,-16 -27,0 -8.4,-25.8 -8.4,25.8 z m 8.4,-9.8 4.8,14.8 15.4,0 -12.4,9 4.72,14.7 -12.52,-9.1 -12.52,9.1 4.72,-14.7 -12.4,-9 15.4,0 4.8,-14.8 z" id="path6" />
+			<path style="fill:#ffd700;fill-opacity:1;fill-rule:evenodd;stroke:none" d="m 166.57653,138.64507 -33.98504,32.37042 18.12536,18.12534 15.65136,-15.75551 c 30.52185,30.97994 54.24551,55.06532 83.71886,84.97747 8.15951,8.45996 22.36846,-3.04386 13.26894,-12.8119 -31.13941,-30.3468 -52.72212,-52.2508 -85.16467,-84.06683 l 19.23453,-19.34808 z" id="hammer_head" inkscape:connector-curvature="0" sodipodi:nodetypes="ccccccccc" />
+			<g id="g3852" transform="matrix(0.83334944,0,0,0.83334944,-15.22385,-132.01121)">
+				<path style="fill:#ffd700;fill-opacity:1;fill-rule:evenodd;stroke:none" d="m 216.7812,433.75 c 72.96097,67.686 191.19511,-54.3637 40.09375,-142.8125 l 5e-5,0 c 112.44686,124.9296 4.49418,163.2273 -34.59375,124.6875 L 220.3125,414 c -1.5958,1.79152 -3.19491,3.58011 -4.78871,5.37341 -3.02847,-2.85878 -7.73236,-3.69883 -9.18009,1.18909 -5.95051,-0.4117 -9.44226,2.885 -11,9.0625 -11.06856,7.3329 -23.05082,13.76655 -29.9375,25.28125 -3.93605,12.18 3.84864,17.47725 12.65625,16.46875 14.43702,-5.9976 18.89869,-18.96115 26.625,-29.65625 5.46174,-1.7386 10.0877,-4.07577 10.93599,-9.048" id="sickle_handle" inkscape:connector-curvature="0" sodipodi:nodetypes="cccccccccccc" />
+			</g>
+		</svg>
+		<div id="container" style="position:absolute;top:0px;left:412px;margin-left:auto;margin-right:auto;">
+			<header style="font-family:russian;color:#ffd700;height:80px;width:400px;padding-top:0px;">
+				<h1 style="font-size:72px;margin-top:0px;text-align:center;">SOVIET RUSH</h1>
+			</header>
+			<div id="game" style="font-family:russian;color:#ffd700;position:relative;left:0px;border:4px solid #ffd700;height:500px;width:400px;overflow:hidden;padding:0px;">
+				COins earned fOr state:<span id="scoreSpan">0</span>
+				<span id="playerSpan"></span>
+				<span id="coinSpan"></span>
+			</div>
+			<button style="background-color:#ffd700;color:#c00;" onclick="document.getElementById('buttons').style.display='block';">display buttons</button>
+			<span style="font-family:russian;color:#ffd700;">COPYRIGHT 2016 nnnNNnnn.infO, mOricdevelOpers</span>
+		</div>
+		<div id="buttons" style="position:fixed;bottom:0px;left:10%;height:200px;width:80%;background-color:green;z-index:700;margin-left:0px;display:none;">
+			<button style="width:25%;height:100%;background-color:#ffd700;color:#c00;float:left;" onClick="if(player.velX == 1){keyOff_('W');}key_('A');">left</button>
+			<div style="width:50%;height:100%;float:left;">
+				<button style="width:100%;height:50%;background-color:#ffd700;color:#c00;float:left;" onClick="if(player.velY == -1){keyOff_('A');}key_('W');">up</button>
+				<button style="width:100%;height:50%;background-color:#ffd700;color:#c00;float:left;" onClick="if(player.velY == 1){keyOff_('A');}key_('S');">down</button>
+			</div>
+			<button style="width:25%;height:10%;background-color:#ffd700;color:#c00;float:left;" onclick="document.getElementById('buttons').style.display='none';">close buttons</button>
+			<button style="width:25%;height:90%;background-color:#ffd700;color:#c00;float:left;" onClick="if(player.velX == -1){keyOff_('W');}key_('D');">right</button>
+		</div>
+	</body>
+</html>	

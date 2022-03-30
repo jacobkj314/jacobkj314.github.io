@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+			function setEventHandlers()
+			{
+				document.getElementById('cords').addEventListener('click', showEvent, false);
+                                document.getElementById('cords').addEventListener('doubleclick', showEvent, false);
+				//document.getElementById('cords').addEventListener('touchstart', showEvent, false);
+			}
+			function showEvent(e)
+			{
+				document.getElementById("cords").innerHTML +=
+    "clientX: " + event.clientX +
+    " - clientY: " + event.clientY+"</br>";
+			}
+		</script>
+	</head>
+	<body onload="setEventHandlers();">
+		<div id="cords" style="position:absolute;top:0px;left:0px;height:100%;width:100%; background-color:#47B; overflow:hidden;">
+		</div>
+	</body>
+</html>

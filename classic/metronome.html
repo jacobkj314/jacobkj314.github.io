@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+	<head>
+		<script>
+			var metronomeInterval;
+			function init()
+			{
+				document.getElementById("toBpm").value = 120;
+				document.getElementById("toBeats").value = 5;
+				document.getElementById("toSubdivide").value = 2;
+				playing = false;
+				count = 0;
+				
+				context = new window.webkitAudioContext();
+				document.getElementById("startStop").innerHTML = "start";
+				
+				
+				//setInterval(function(){beep(660);}, 1000);
+			}	
+			
+			function runMetronome()
+			{
+				bpm = document.getElementById("toBpm").value;
+				beats = document.getElementById("toBeats").value;
+				subdivide = document.getElementById("toSubdivide").value;
+				if(playing)//will stop playing
+				{
+					playing = false;
+					clearInterval(metronomeInterval);
+					count = 0;
+					document.getElementById("startStop").innerHTML = "start";
+				}
+				else//will start playing
+				{
+					playing = true;
+					metronomeInterval = setInterval(function()
+					{
+						console.log(count);
+						if(count%subdivide === 0)
+						{
+							if(count%(beats*subdivide) === 0)
+							{
+								beep(810);
+							}
+							else
+							{
+								beep(720);
+							}
+						}
+						else
+						{
+							beep(630);
+						}
+						count++;
+					}, 60000/bpm/subdivide);	
+					document.getElementById("startStop").innerHTML = "stop";
+				}
+			}
+			
+			function beep(toFreq)
+			{
+				//var context = new window.AudioContext();
+				var osc = context.createOscillator();
+				osc.frequency.value = toFreq;
+				osc.connect(context.destination);
+				osc.start(0);
+				setTimeout(function(){osc.stop();}, 30);
+			}
+			
+		</script>
+	</head>
+	<body onload="init();">
+		<h3>Metronome</h3>
+		BPM:<input id="toBpm" type="number"/></br>
+		Beats:<input id="toBeats" type="number"/></br>
+		Subdivisions per beat:<input id="toSubdivide" type="number"/></br>
+		<button id="startStop" onclick="runMetronome();"></button>
+	</body>
+</html>
