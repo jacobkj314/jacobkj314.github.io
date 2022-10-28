@@ -126,6 +126,9 @@
 			}
         </style>
         <script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/sw.js');
+			}
         </script>
 	</head>
 	<body>
@@ -137,19 +140,40 @@
             <div class="main">
             	<nav>
                     <ul>
-                    	<li><a href="../index.html">HOME</a></li>
-						<li><a href="../classic/index.html">classic site</a></li>
+                    	<li><a href="../index.html">HOME</a></li> 
                     </ul>
                 </nav>
                 <div class="article" id="article">
-						I'm going to put links here to some thinks I've worked on
+						<p>Below are a handful of reports and papers I have written or collaborated on in various classes. They are arranged in reverse chronological order, with the most recent at the top. Be sure to also check out <a href="https://github.com/jacobkj314">My GitHub</a> to see some of my coding projects.</p>
+
+						<h3>DrugReader (for CS6390 Information Extraction from Text)</h3>
+						<p>These are the reports I wrote on my relation extraction system. It was a three phase project, where each phase should have some addition and improvement. The three phase reports, plus the overall report are below:</p>
+						<ul>
+							<li><a href = "./DrugReader/Phase1.pdf">Phase 1 report</a></li>
+							<li><a href = "./DrugReader/Phase2.pdf">Phase 2 report</a></li>
+							<li><a href = "./DrugReader/Phase3.pdf">Phase 3 report</a></li>
+							<li><a href = "./DrugReader/Summary.pdf">Overall report</a></li>
+						</ul>
+
+						<h3>Vector Embedding Research Proposal (for LING5190 Psycholinguistics)</h3>
+						<p>With a partner, I wrote a research proposal, including expected results, for a final project in this class. We proposed to expand on previous evaluations of vector embeddings by separately evaluating similarities between words with different types of semantic relatedness, all using the lexical decision task paradigm.</p>
+						<ul>
+							<li><a href="./Psycholinguistics/ResearchProposal.pdf">Research Proposal</a></li>
+							<li><a href="./Psycholinguistics/PsycholinguisticsLab2.pdf">Also, a lab report on an earlier Lexical Decision Task experiment</a></li>
+						</ul>
+
+						<h3>Syntax Report (for LING5021 Syntax)</h3>
+						<p><a href="./Syntax/LING5021Paper.pdf">Here</a> is a report I wrote on Syntactic and Semantic Interactions with Movement.</p>
+
+						<h3>Statistics Report (for MATH3080 Syntax II)</h3>
+						<p><a href="./Statistics/Project.pdf">Here</a> is a report I wrote as a term project. My data came from an experient in LING5011 Phonetics/Phonology II, but I wanted to do additional statistical analysis on the data.</p>
                 </div>
                 
             </div>
             <footer>
 			<br>
             	<center>&copy;2022 Jacob Johnson</center>
-				<center>{first name}k{last initial}3{first two decimal places in pi}{at}{google's email website}</center>
+				<center>{first name}{dot}k{dot}{last name}{at}utah{dot}edu</center>
 			</br>
             </footer>
         </div>
