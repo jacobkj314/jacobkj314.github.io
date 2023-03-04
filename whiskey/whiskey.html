@@ -1,0 +1,561 @@
+<!--
+(C) 2018 Klaus Llwynog.
+
+This file is part of Whiskey.
+
+Whiskey is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Whiskey is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Whiskey.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+    <meta charset = "utf-8" />
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1" />
+    <link rel = "stylesheet" type = "text/css" href = "css/whiskey.css" />
+    <title>Whiskey | Interactive Feature Switchboard</title>
+  </head>
+  <body>
+    <div id = "container">
+      <div id = "header" class = "cell">
+        <a class = "home" href = "whiskey.html"><h1>Whiskey</h1> <h2 id = "mobile-h2">/ Interactive Feature Switchboard</h2></a>
+        <p class = "be-small">&nbsp;</p>
+        <hr />
+        <p>
+        Whiskey is an interactive feature switchboard! Use the switchboard on the left-hand side to select a set of phonological features; or, select a segment on the right-hand side to see its phonological features. <a href = "about.html">About Whiskey.</a>
+        </p>
+      </div>
+<!--      <div id = "cell content">-->
+        <div id = "switchboard1" class = "cell switchboard">
+          <div class = "group cons">
+            <input type = "radio" name = "cons" id = "cons-m" value = "m" onclick = "update()"><label for = "cons-m">&minus;</label>
+            <input type = "radio" name = "cons" id = "cons-0" value = "0" onclick = "update()" checked = "checked"><label for = "cons-0">&plusmn;</label>
+            <input type = "radio" name = "cons" id = "cons-p" value = "p" onclick = "update()"><label for = "cons-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with significant constriction along the centre of the vocal tract.">Consonantal</abbr></span><br />
+
+          <div class = "group syll">
+            <input type = "radio" name = "syll" id = "syll-m" value = "m" onclick = "update()"><label for = "syll-m">&minus;</label>
+            <input type = "radio" name = "syll" id = "syll-0" value = "0" onclick = "update()" checked = "checked"><label for = "syll-0">&plusmn;</label>
+            <input type = "radio" name = "syll" id = "syll-p" value = "p" onclick = "update()"><label for = "syll-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Able to function as the nucleus of a syllable.">Syllabic</abbr></span><br />
+
+          <div class = "group son">
+            <input type = "radio" name = "son" id = "son-m" value = "m" onclick = "update()"><label for = "son-m">&minus;</label>
+            <input type = "radio" name = "son" id = "son-0" value = "0" onclick = "update()" checked = "checked"><label for = "son-0">&plusmn;</label>
+            <input type = "radio" name = "son" id = "son-p" value = "p" onclick = "update()"><label for = "son-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with constriction that equalises air pressure around the constriction.">Sonorant</abbr></span><br />
+
+          <div class = "group app">
+            <input type = "radio" name = "app" id = "app-m" value = "m" onclick = "update()"><label for = "app-m">&minus;</label>
+            <input type = "radio" name = "app" id = "app-0" value = "0" onclick = "update()" checked = "checked"><label for = "app-0">&plusmn;</label>
+            <input type = "radio" name = "app" id = "app-p" value = "p" onclick = "update()"><label for = "app-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with constriction that enables frictionless escape of air.">Approximant</abbr></span><br />
+          <hr />
+
+          <div class = "group voice">
+            <input type = "radio" name = "voice" id = "voice-m" value = "m" onclick = "update()"><label for = "voice-m">&minus;</label>
+            <input type = "radio" name = "voice" id = "voice-0" value = "0" onclick = "update()" checked = "checked"><label for = "voice-0">&plusmn;</label>
+            <input type = "radio" name = "voice" id = "voice-p" value = "p" onclick = "update()"><label for = "voice-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with vibration of the vocal folds.">Voice</abbr></span><br />
+
+          <div class = "group sg">
+            <input type = "radio" name = "sg" id = "sg-m" value = "m" onclick = "update()"><label for = "sg-m">&minus;</label>
+            <input type = "radio" name = "sg" id = "sg-0" value = "0" onclick = "update()" checked = "checked"><label for = "sg-0">&plusmn;</label>
+            <input type = "radio" name = "sg" id = "sg-p" value = "p" onclick = "update()"><label for = "sg-p">&plus;</label>
+          </div>
+          <span class = "feature" id = "mobile-sg"><abbr title = "Produced with friction caused by opening the glottis.">Spread Glottis</abbr></span><br />
+
+          <div class = "group cg">
+            <input type = "radio" name = "cg" id = "cg-m" value = "m" onclick = "update()"><label for = "cg-m">&minus;</label>
+            <input type = "radio" name = "cg" id = "cg-0" value = "0" onclick = "update()" checked = "checked"><label for = "cg-0">&plusmn;</label>
+            <input type = "radio" name = "cg" id = "cg-p" value = "p" onclick = "update()"><label for = "cg-p">&plus;</label>
+          </div>
+          <span class = "feature" id = "mobile-cg"><abbr title = "Produced with constriction of the glottis.">Constr. Glottis</abbr></span><br />
+          <hr />
+
+          <div class = "group cont">
+            <input type = "radio" name = "cont" id = "cont-m" value = "m" onclick = "update()"><label for = "cont-m">&minus;</label>
+            <input type = "radio" name = "cont" id = "cont-0" value = "0" onclick = "update()" checked = "checked"><label for = "cont-0">&plusmn;</label>
+            <input type = "radio" name = "cont" id = "cont-p" value = "p" onclick = "update()"><label for = "cont-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced without central occlusion in the vocal tract.">Continuant</abbr></span><br />
+
+          <div class = "group lat">
+            <input type = "radio" name = "lat" id = "lat-m" value = "m" onclick = "update()"><label for = "lat-m">&minus;</label>
+            <input type = "radio" name = "lat" id = "lat-0" value = "0" onclick = "update()" checked = "checked"><label for = "lat-0">&plusmn;</label>
+            <input type = "radio" name = "lat" id = "lat-p" value = "p" onclick = "update()"><label for = "lat-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with occlusion along the centre, but not the sides, of the tongue.">Lateral</abbr></span><br />
+
+          <div class = "group del">
+            <input type = "radio" name = "del" id = "del-m" value = "m" onclick = "update()"><label for = "del-m">&minus;</label>
+            <input type = "radio" name = "del" id = "del-0" value = "0" onclick = "update()" checked = "checked"><label for = "del-0">&plusmn;</label>
+            <input type = "radio" name = "del" id = "del-p" value = "p" onclick = "update()"><label for = "del-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with gradual, non-instantaneous release of constriction.">Del. Release</abbr></span><br />
+
+          <div class = "group nas">
+            <input type = "radio" name = "nas" id = "nas-m" value = "m" onclick = "update()"><label for = "nas-m">&minus;</label>
+            <input type = "radio" name = "nas" id = "nas-0" value = "0" onclick = "update()" checked = "checked"><label for = "nas-0">&plusmn;</label>
+            <input type = "radio" name = "nas" id = "nas-p" value = "p" onclick = "update()"><label for = "nas-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with a lowered velum in order to allow airflow in the nasal cavity.">Nasal</abbr></span><br />
+          <hr />
+
+          <div class = "button-holder">
+            <input type = "button" id = "reset" value = "reset" onclick = "reset()" /><label for = "reset">Reset All</label>
+            <input type = "button" id = "waffle" value = "waffle" onclick = "" /><label for = "waffle">Reset None</label>
+<!--        <input type = "button" id = "adder" value = "adder" onclick = "addFeature()" /><label for = "adder">Add new feature</label><br />-->
+<!--        <input type = "button" id = "adder" value = "adder" onclick = "addFeature()" disabled = "disabled"/><label for = "adder">Add new feature</label><br />-->
+          </div>
+
+            <input type = "checkbox" id = "hide" onclick = "hide()" /><label for = "hide">Hide unspecified features</label><br />
+<!--        <input type = "checkbox" id = "flipPulmonic" onclick = "flipPulmonic()" /><label for = "flipPulmonic">Show non-pulmonic consonants</label>
+            <label for = "limit">yeah</label><select id = "limit" onchange = "limit()" multiple = "multiple">
+              <option value = "english">English</option>
+              <option value = "catalan">Catalan</option>
+              <option value = "lamba">Lamba</option>
+              <option value = "turkish">Turkish</option>
+              <option value = "somali">Somali</option>
+            </select>-->
+            <input type = "checkbox" id = "english" onclick = "english()" /><label for = "english">Only show English phonemes</label>
+            <input type = "checkbox" id = "catalan" onclick = "catalan()" /><label for = "catalan">Only show Catalan phonemes</label>
+            <input type = "checkbox" id = "polish" onclick = "polish()" /><label for = "polish">Only show Polish phonemes</label>
+            <input type = "checkbox" id = "turkish" onclick = "turkish()" /><label for = "turkish">Only show Turkish phonemes</label>
+<!--        <input type = "checkbox" id = "somali" onclick = "somali()" /><label for = "somali">Only show Somali phonemes</label>-->
+<!--        <input type = "checkbox" id = "lamba" onclick = "lamba()" /><label for = "lamba">Only show Lamba phonemes</label>-->
+        </div>
+
+        <div id = "switchboard2" class = "cell switchboard">
+          <div class = "group lab">
+            <input type = "radio" name = "lab" id = "lab-m" value = "m" onclick = "update()"><label for = "lab-m">&minus;</label>
+            <input type = "radio" name = "lab" id = "lab-0" value = "0" onclick = "update()" checked = "checked"><label for = "lab-0">&plusmn;</label>
+            <input type = "radio" name = "lab" id = "lab-p" value = "p" onclick = "update()"><label for = "lab-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with the lips as primary articulators.">Labial</abbr></span><br />
+
+          <div class = "group rnd">
+            <input type = "radio" name = "rnd" id = "rnd-m" value = "m" onclick = "update()"><label for = "rnd-m">&minus;</label>
+            <input type = "radio" name = "rnd" id = "rnd-0" value = "0" onclick = "update()" checked = "checked"><label for = "rnd-0">&plusmn;</label>
+            <input type = "radio" name = "rnd" id = "rnd-p" value = "p" onclick = "update()"><label for = "rnd-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with lip rounding.">Round</abbr></span><br />
+          <hr />
+
+          <div class = "group cor">
+            <input type = "radio" name = "cor" id = "cor-m" value = "m" onclick = "update()"><label for = "cor-m">&minus;</label>
+            <input type = "radio" name = "cor" id = "cor-0" value = "0" onclick = "update()" checked = "checked"><label for = "cor-0">&plusmn;</label>
+            <input type = "radio" name = "cor" id = "cor-p" value = "p" onclick = "update()"><label for = "cor-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with the raised tip or blade of the tongue.">Coronal</abbr></span><br />
+
+          <div class = "group ant">
+            <input type = "radio" name = "ant" id = "ant-m" value = "m" onclick = "update()"><label for = "ant-m">&minus;</label>
+            <input type = "radio" name = "ant" id = "ant-0" value = "0" onclick = "update()" checked = "checked"><label for = "ant-0">&plusmn;</label>
+            <input type = "radio" name = "ant" id = "ant-p" value = "p" onclick = "update()"><label for = "ant-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced at or further forward than the alveolar ridge.">Anterior</abbr></span><br />
+
+          <div class = "group dist">
+            <input type = "radio" name = "dist" id = "dist-m" value = "m" onclick = "update()"><label for = "dist-m">&minus;</label>
+            <input type = "radio" name = "dist" id = "dist-0" value = "0" onclick = "update()" checked = "checked"><label for = "dist-0">&plusmn;</label>
+            <input type = "radio" name = "dist" id = "dist-p" value = "p" onclick = "update()"><label for = "dist-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with both the tongue tip and the tongue blade.">Distributed</abbr></span><br />
+
+          <div class = "group str">
+            <input type = "radio" name = "str" id = "str-m" value = "m" onclick = "update()"><label for = "str-m">&minus;</label>
+            <input type = "radio" name = "str" id = "str-0" value = "0" onclick = "update()" checked = "checked"><label for = "str-0">&plusmn;</label>
+            <input type = "radio" name = "str" id = "str-p" value = "p" onclick = "update()"><label for = "str-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with complex, high-intensity friction.">Strident</abbr></span><br />
+          <hr />
+
+          <div class = "group dors">
+            <input type = "radio" name = "dors" id = "dors-m" value = "m" onclick = "update()"><label for = "dors-m">&minus;</label>
+            <input type = "radio" name = "dors" id = "dors-0" value = "0" onclick = "update()" checked = "checked"><label for = "dors-0">&plusmn;</label>
+            <input type = "radio" name = "dors" id = "dors-p" value = "p" onclick = "update()"><label for = "dors-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with the bunched back of the tongue.">Dorsal</abbr></span><br />
+
+          <div class = "group high">
+            <input type = "radio" name = "high" id = "high-m" value = "m" onclick = "update()"><label for = "high-m">&minus;</label>
+            <input type = "radio" name = "high" id = "high-0" value = "0" onclick = "update()" checked = "checked"><label for = "high-0">&plusmn;</label>
+            <input type = "radio" name = "high" id = "high-p" value = "p" onclick = "update()"><label for = "high-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with a raised dorsum.">High</abbr></span><br />
+
+          <div class = "group low">
+            <input type = "radio" name = "low" id = "low-m" value = "m" onclick = "update()"><label for = "low-m">&minus;</label>
+            <input type = "radio" name = "low" id = "low-0" value = "0" onclick = "update()" checked = "checked"><label for = "low-0">&plusmn;</label>
+            <input type = "radio" name = "low" id = "low-p" value = "p" onclick = "update()"><label for = "low-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with a lowered dorsum.">Low</abbr></span><br />
+
+          <div class = "group front">
+            <input type = "radio" name = "front" id = "front-m" value = "m" onclick = "update()"><label for = "front-m">&minus;</label>
+            <input type = "radio" name = "front" id = "front-0" value = "0" onclick = "update()" checked = "checked"><label for = "front-0">&plusmn;</label>
+            <input type = "radio" name = "front" id = "front-p" value = "p" onclick = "update()"><label for = "front-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with an advanced dorsum.">Front</abbr></span><br />
+
+          <div class = "group back">
+            <input type = "radio" name = "back" id = "back-m" value = "m" onclick = "update()"><label for = "back-m">&minus;</label>
+            <input type = "radio" name = "back" id = "back-0" value = "0" onclick = "update()" checked = "checked"><label for = "back-0">&plusmn;</label>
+            <input type = "radio" name = "back" id = "back-p" value = "p" onclick = "update()"><label for = "back-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with a retracted dorsum.">Back</abbr></span><br />
+<!--
+          <div class = "group tense">
+            <input type = "radio" name = "tense" id = "tense-m" value = "m" onclick = "update()"><label for = "tense-m">&minus;</label>
+            <input type = "radio" name = "tense" id = "tense-0" value = "0" onclick = "update()" checked = "checked"><label for = "tense-0">&plusmn;</label>
+            <input type = "radio" name = "tense" id = "tense-p" value = "p" onclick = "update()"><label for = "tense-p">&plus;</label>
+          </div>
+          <span class = "feature">Tense</span><br />
+          <hr />
+
+          <div class = "group phar">
+            <input type = "radio" name = "phar" id = "phar-m" value = "m" onclick = "update()"><label for = "phar-m">&minus;</label>
+            <input type = "radio" name = "phar" id = "phar-0" value = "0" onclick = "update()" checked = "checked"><label for = "phar-0">&plusmn;</label>
+            <input type = "radio" name = "phar" id = "phar-p" value = "p" onclick = "update()"><label for = "phar-p">&plus;</label>
+          </div>
+          <span class = "feature">Pharyngeal</span><br />-->
+
+          <div class = "group atr">
+            <input type = "radio" name = "atr" id = "atr-m" value = "m" onclick = "update()"><label for = "atr-m">&minus;</label>
+            <input type = "radio" name = "atr" id = "atr-0" value = "0" onclick = "update()" checked = "checked"><label for = "atr-0">&plusmn;</label>
+            <input type = "radio" name = "atr" id = "atr-p" value = "p" onclick = "update()"><label for = "atr-p">&plus;</label>
+          </div>
+          <span class = "feature"><abbr title = "Produced with an advanced tongue root.">ATR</abbr></span><br />
+          <hr />
+<!--
+          <div id = "custom-feature">
+            <p>No custom features</p>
+          </div>-->
+        </div>
+        <div id = "box" class = "cell">
+          <blockquote id = "little-box">
+          </blockquote>
+        </div>
+        <div id = "ipa-chart" class = "cell">
+          <table id = "consonants">
+            <tr>
+              <th></th>
+              <th id = "lablabial" class = "natcl"><span class = "bro">&nbsp;</span>Bilabial</th>
+              <th id = "labdental" class = "natcl"><span class = "bro">&nbsp;</span>Labiodental</th>
+              <th id = "dental" class = "natcl"><span class = "bro">&nbsp;</span>Dental</th>
+              <th id = "alveolar" class = "natcl"><span class = "bro">&nbsp;</span>Alveolar</th>
+              <th id = "palveolar" class = "natcl"><span class = "bro">&nbsp;</span>Postalveolar</th>
+              <th id = "retroflex" class = "natcl"><span class = "bro">&nbsp;</span>Retroflex</th>
+              <th id = "palatal" class = "natcl"><span class = "bro">&nbsp;</span>Palatal</th>
+              <th id = "velar" class = "natcl"><span class = "bro">&nbsp;</span>Velar</th>
+              <th id = "uvular" class = "natcl"><span class = "bro">&nbsp;</span>Uvular</th>
+              <th id = "pharynx" class = "natcl"><span class = "bro">&nbsp;</span>Pharyngeal</th>
+              <th id = "glottal" class = "natcl"><span class = "bro">&nbsp;</span>Glottal</th>
+            </tr>
+            <tr>
+              <th id = "plosive" class = "natcl">Plosive</th>
+              <td><span id = "wbp" class = "symbol">p</span> <span id = "vbp" class = "symbol">b</span></td>
+              <td></td>
+              <td><span id = "wdp" class = "symbol">t&#810;</span> <span id = "vdp" class = "symbol">d&#810;</span></td>
+              <td><span id = "wap" class = "symbol">t</span> <span id = "vap" class = "symbol">d</span></td>
+              <td><span id = "wqp" class = "symbol">t&#817;</span> <span id = "vqp" class = "symbol">d&#817;</span></td>
+              <td><span id = "wrp" class = "symbol">&#648;</span> <span id = "vrp" class = "symbol">&#598;</span></td>
+              <td><span id = "wpp" class = "symbol">c</span> <span id = "vpp" class = "symbol">&#607;</span></td>
+              <td><span id = "wvp" class = "symbol">k</span> <span id = "vvp" class = "symbol">g</span></td>
+              <td><span id = "wup" class = "symbol">q</span> <span id = "vup" class = "symbol">g</span></td>
+              <td></td>
+              <td><span id = "wgp" class = "symbol">&#660;</span></td>
+            </tr>
+            <tr>
+              <th id = "nasal" class = "natcl">Nasal</th>
+              <td><span id = "wbn" class = "symbol">m&#805;</span> <span id = "vbn" class = "symbol">m</span></td>
+              <td><span id = "wln" class = "symbol">&#625;&#778;</span> <span id = "vln" class = "symbol">&#625;</span></td>
+              <td><span id = "wdn" class = "symbol">n&#810;&#778;</span> <span id = "vdn" class = "symbol">n&#810;</span></td>
+              <td><span id = "wan" class = "symbol">n&#805;</span> <span id = "van" class = "symbol">n</span></td>
+              <td><span id = "wqn" class = "symbol">n&#817;&#778;</span> <span id = "vqn" class = "symbol">n&#817;</span></td>
+              <td><span id = "wrn" class = "symbol">&#627;&#778;</span> <span id = "vrn" class = "symbol">&#627;</span></td>
+              <td><span id = "wpn" class = "symbol">&#626;&#778;</span> <span id = "vpn" class = "symbol">&#626;</span></td>
+              <td><span id = "wvn" class = "symbol">&#331;&#778;</span> <span id = "vvn" class = "symbol">&#331;</span></td>
+              <td><span id = "wun" class = "symbol">n&#805;</span> <span id = "vun" class = "symbol">n</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "trill" class = "natcl">Trill</th>
+              <td><span id = "wbr" class = "symbol">b&#805;</span> <span id = "vbr" class = "symbol">b</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "war" class = "symbol">r&#805;</span> <span id = "var" class = "symbol">r</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "wur" class = "symbol">r&#805;</span> <span id = "vur" class = "symbol">r</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "flap" class = "natcl">Tap / Flap</th>
+              <td></td>
+              <td><span id = "wlt" class = "symbol">&#11377;&#805;</span> <span id = "vlt" class = "symbol">&#11377;</span></td>
+              <td></td>
+              <td><span id = "wat" class = "symbol">&#638;&#805;</span> <span id = "vat" class = "symbol">&#638;</span></td>
+              <td></td>
+              <td><span id = "wrt" class = "symbol">&#637;&#778;</span> <span id = "vrt" class = "symbol">&#637;</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "fricative" class = "natcl">Fricative</th>
+              <td><span id = "wbf" class = "symbol">&#632;</span> <span id = "vbf" class = "symbol">&beta;</span></td>
+              <td><span id = "wlf" class = "symbol">f</span> <span id = "vlf" class = "symbol">v</span></td>
+              <td><span id = "wdf" class = "symbol">&theta;</span> <span id = "vdf" class = "symbol">&eth;</span></td>
+              <td><span id = "waf" class = "symbol">s</span> <span id = "vaf" class = "symbol">z</span></td>
+              <td><span id = "wqf" class = "symbol">&#643;</span> <span id = "vqf" class = "symbol">&#658;</span></td>
+              <td><span id = "wrf" class = "symbol">&#642;</span> <span id = "vrf" class = "symbol">&#656;</span></td>
+              <td><span id = "wpf" class = "symbol">&ccedil;</span> <span id = "vpf" class = "symbol">&#669;</span></td>
+              <td><span id = "wvf" class = "symbol">x</span> <span id = "vvf" class = "symbol">&#611;</span></td>
+              <td><span id = "wuf" class = "symbol">&chi;</span> <span id = "vuf" class = "symbol">&#641;</span></td>
+              <td><span id = "wff" class = "symbol">&#295;</span> <span id = "vff" class = "symbol">&#661;</span></td>
+              <td><span id = "wgf" class = "symbol">h</span> <span id = "vgf" class = "symbol">&#614;</span></td>
+            </tr>
+            <tr>
+              <th id = "latfric" class = "natcl">Lateral Fricative</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "waz" class = "symbol">&#620;</span> <span id = "vaz" class = "symbol">&#622;</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "approx" class = "natcl">Approximant</th>
+              <td></td>
+              <td><span id = "wla" class = "symbol">&#651;&#805;</span> <span id = "vla" class = "symbol">&#651;</span></td>
+              <td></td>
+              <td><span id = "waa" class = "symbol">&#633;&#805;</span> <span id = "vaa" class = "symbol">&#633;</span></td>
+              <td></td>
+              <td><span id = "wra" class = "symbol">&#635;&#778;</span> <span id = "vra" class = "symbol">&#635;</span></td>
+              <td><span id = "wpa" class = "symbol">&#567;&#778;</span> <span id = "vpa" class = "symbol">j</span></td>
+              <td><span id = "wva" class = "symbol">&#624;&#778;</span> <span id = "vva" class = "symbol">&#624;</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "latapprox" class = "natcl">Lateral Approximant</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "wal" class = "symbol">l&#805;</span> <span id = "val" class = "symbol">l</span></td>
+              <td></td>
+              <td><span id = "wrl" class = "symbol">&#621;&#778;</span> <span id = "vrl" class = "symbol">&#621;</span></td>
+              <td><span id = "wpl" class = "symbol">&#654;&#805;</span> <span id = "vpl" class = "symbol">&#654;</span></td>
+              <td><span id = "wvl" class = "symbol">l&#805;</span> <span id = "vvl" class = "symbol">l</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "labapprox" class = "natcl">Labial Approximant</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "wpz" class = "symbol">&#613;&#778;</span> <span id = "vpz" class = "symbol">&#613;</span></td>
+              <td><span id = "wvz" class = "symbol">&#653;</span> <span id = "vvz" class = "symbol">w</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "affricate" class = "natcl">Affricate</th>
+              <td><span id = "wb2" class = "symbol">p&#865;&#632;</span> <span id = "vb2" class = "symbol">b&#865;&beta;</span></td>
+              <td><span id = "wl2" class = "symbol">p&#865;f</span> <span id = "vl2" class = "symbol">b&#865;v</span></td>
+              <td><span id = "wd2" class = "symbol">t&#810;&#865;&theta;</span> <span id = "vd2" class = "symbol">d&#810;&#865;&eth;</span></td>
+              <td><span id = "wa2" class = "symbol">t&#865;s</span> <span id = "va2" class = "symbol">d&#865;z</span></td>
+              <td><span id = "wq2" class = "symbol">t&#865;&#643;</span> <span id = "vq2" class = "symbol">d&#865;&#658;</span></td>
+              <td><span id = "wr2" class = "symbol">&#648;&#865;&#642;</span> <span id = "vr2" class = "symbol">&#598;&#865;&#656;</span></td>
+              <td><span id = "wp2" class = "symbol">c&#865;&ccedil;</span> <span id = "vp2" class = "symbol">&#607;&#865;&#669;</span></td>
+              <td><span id = "wv2" class = "symbol">k&#865;x</span> <span id = "vv2" class = "symbol">g&#865;&#611;</span></td>
+              <td><span id = "wu2" class = "symbol">q&#865;&chi;</span> <span id = "vu2" class = "symbol">g&#865;&#641;</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr class = "non-pulmonic">
+              <th id = "click" class = "natcl">Click</th>
+              <td><span id = "wbc" class = "symbol">&#664;</span> <span id = "vbc" class = "symbol">&#664;&#812;</span></td>
+              <td></td>
+              <td><span id = "wdc" class = "symbol">&#448;</span> <span id = "vdc" class = "symbol">&#448;&#812;</span></td>
+              <td><span id = "wac" class = "symbol">&#449;</span> <span id = "vac" class = "symbol">&#449;&#812;</span></td>
+              <td><span id = "wqc" class = "symbol">&#451;</span> <span id = "vqc" class = "symbol">&#451;&#812;</span></td>
+              <td></td>
+              <td><span id = "wpc" class = "symbol">&#450;</span> <span id = "vpc" class = "symbol">&#450;&#812;</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr class = "non-pulmonic">
+              <th id = "implosive" class = "natcl">Implosive</th>
+              <td><span id = "wbi" class = "symbol">&#595;&#805;</span> <span id = "vbi" class = "symbol">&#595;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "wai" class = "symbol">&#599;&#805;</span> <span id = "vai" class = "symbol">&#599;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "wpi" class = "symbol">&#644;&#778;</span> <span id = "vpi" class = "symbol">&#644;</span></td>
+              <td><span id = "wvi" class = "symbol">&#608;&#778;</span> <span id = "vvi" class = "symbol">&#608;</span></td>
+              <td><span id = "wui" class = "symbol">&#667;&#805;</span> <span id = "vui" class = "symbol">&#667;</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr class = "non-pulmonic">
+              <th id = "ejective" class = "natcl">Ejective</th>
+              <td><span id = "wbe" class = "symbol">p&#700;</span> <span id = "vbe" class = "symbol">p&#812;&#700;</span></td>
+              <td></td>
+              <td><span id = "wde" class = "symbol">t&#810;&#700;</span> <span id = "vde" class = "symbol">t&#810;&#812;&#700;</span></td>
+              <td><span id = "wae" class = "symbol">t&#700;</span> <span id = "vae" class = "symbol">t&#812;&#700;</span></td>
+              <td><span id = "wqe" class = "symbol">t&#817;&#700;</span> <span id = "vqe" class = "symbol">t&#817;&#812;&#700;</span></td>
+              <td><span id = "wre" class = "symbol">&#648;&#700;</span> <span id = "vre" class = "symbol">&#648;&#812;&#700;</span></td>
+              <td><span id = "wpe" class = "symbol">c&#700;</span> <span id = "vpe" class = "symbol">c&#812;&#700;</span></td>
+              <td><span id = "wve" class = "symbol">k&#700;</span> <span id = "vve" class = "symbol">k&#812;&#700;</span></td>
+              <td><span id = "wue" class = "symbol">q&#700;</span> <span id = "vue" class = "symbol">q&#812;&#700;</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table><br />
+
+          <table id = "vowels">
+            <tr>
+              <th></th>
+              <th id = "front" class = "natcl" colspan = "2">Front</th>
+              <th id = "nfront" class = "natcl" colspan = "2">Near-front</th>
+              <th id = "central" class = "natcl" colspan = "2">Central</th>
+              <th id = "nback" class = "natcl" colspan = "2">Near-back</th>
+              <th id = "back" class = "natcl" colspan = "2">Back</th>
+            </tr>
+            <tr>
+              <th id = "high" class = "natcl">High</th>
+              <td><span id = "v000" class = "symbol">i</span></td>
+              <td><span id = "v001" class = "symbol">y</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v020" class = "symbol">&#616;</span></td>
+              <td><span id = "v021" class = "symbol">&#649;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v040" class = "symbol">&#623;</span></td>
+              <td><span id = "v041" class = "symbol">u</span></td>
+            </tr>
+            <tr>
+              <th id = "nhigh" class = "natcl">Near-High</th>
+              <td></td>
+              <td></td>
+              <td><span id = "v110" class = "symbol">i</span></td>
+              <td><span id = "v111" class = "symbol">y</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v131" class = "symbol">&#650;</span></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "mhigh" class = "natcl">Mid-High</th>
+              <td><span id = "v200" class = "symbol">e</span></td>
+              <td><span id = "v201" class = "symbol">&oslash;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v220" class = "symbol">&#600;</span></td>
+              <td><span id = "v221" class = "symbol">&#629;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v240" class = "symbol">&#612;</span></td>
+              <td><span id = "v241" class = "symbol">o</span></td>
+            </tr>
+            <tr>
+              <th id = "mid" class = "natcl">Mid</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v320" class = "symbol">&#601;</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "mlow" class = "natcl">Mid-Low</th>
+              <td><span id = "v400" class = "symbol">&#603;</span></td>
+              <td><span id = "v401" class = "symbol">&oelig;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v420" class = "symbol">&#604;</span></td>
+              <td><span id = "v421" class = "symbol">&#606;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v440" class = "symbol">&#652;</span></td>
+              <td><span id = "v441" class = "symbol">&#596;</span></td>
+            </tr>
+            <tr>
+              <th id = "nlow" class = "natcl">Near-Low</th>
+              <td></td>
+              <td></td>
+              <td><span id = "v510" class = "symbol">&aelig;</span></td>
+              <td></td>
+              <td><span id = "v520" class = "symbol">&#592;</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th id = "low" class = "natcl">Low</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v620" class = "symbol">a</span></td>
+              <td><span id = "v621" class = "symbol">&oelig;</span></td>
+              <td></td>
+              <td></td>
+              <td><span id = "v640" class = "symbol">&#593;</span></td>
+              <td><span id = "v641" class = "symbol">&#594;</span></td>
+            </tr>
+          </table>
+          <script src = "js/whiskey.js"></script>
+        </div>
+<!--      </div>-->
+    </div>
+  </body>
+</html>

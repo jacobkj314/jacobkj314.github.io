@@ -1,0 +1,703 @@
+/*
+(C) 2018 Klaus Llwynog.
+
+This file is part of Whiskey.
+
+Whiskey is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Whiskey is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Whiskey.  If not, see <http://www.gnu.org/licenses/>
+*/
+
+@font-face {
+  font-family: charis;
+  src: url(../media/CharisSIL-R.ttf);
+}
+
+@font-face {
+  font-family: charter;
+  src: url(../media/charter_regular-webfont.woff);
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+body {
+  font-family: charter;
+  background: #fbfbf4;
+  font-size: 12pt;
+}
+
+ul {
+  font-size: 10pt;
+}
+
+#container {
+  display: grid;
+/*  grid-template-rows: 210px 675px 990px;/*0.5fr 3fr 4fr;*/
+/*  grid-template-columns: 282px 282px 264px 1062px;/*188px 188px 176px 708px;/*0.8fr 0.8fr 0.75fr 3fr;*/
+  grid-template-rows: 140px 450px 000px;/*0.5fr 3fr 4fr;$the 000px was formerly 660px*/
+  grid-template-columns: 188px 188px 176px 708px;/*0.8fr 0.8fr 0.75fr 3fr;*/
+}
+
+.cell {
+  padding: 6px;
+}
+
+#header {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+#switchboard1 {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+#switchboard2 {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+#box {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+
+#ipa-chart {
+  padding-left: 16px;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 4;
+  grid-column-end: 6;
+}
+
+#footer {
+  grid-row-start: 3;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+#header p {
+  font-size: 87.5%;
+}
+
+#header .be-small {
+  font-size: 25%;
+}
+
+#footer p {
+  font-size: 87.5%;
+}
+
+#footer .be-small {
+  font-size: 25%;
+}
+
+#header h1, h2 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  display: inline;
+}
+
+.charis {
+  font-family: charis;
+  line-height: 0pt;
+}
+
+.email {
+  font-weight: bold;
+  color: #808;
+}
+
+.symbol, .natcl {
+  cursor: pointer;
+}
+
+.natcl:hover {
+  color: black !important;
+  text-shadow: 0px 0px 6px #fbb, 0px 0px 9px #00f;
+}
+
+.symbol:hover {
+  color: black !important;
+  text-shadow: 0px 0px 6px #bbf, 0px 0px 9px #f00;
+}
+
+#custom-feature p {
+  text-align: center;
+  color: dimgrey;
+}
+
+a {
+  font-weight: bold;
+  color: #008;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.home {
+  color: inherit;
+}
+
+a.home:hover {
+  text-decoration: inherit;
+}
+
+#ipa-chart {
+  font-family: charis;
+  float: right;
+  font-size: 90%;
+}
+
+.switchboard {
+  font-weight: bold;
+  font-size: 75%;
+}
+
+.group {
+  -moz-transition: all .1s ease-in;
+  -o-transition: all .1s ease-in;
+  -webkit-transition: all .1s ease-in;
+  transition: all .1s ease-in;
+  display: inline-block;
+  border: solid 2px black;
+  border-radius: 16px;
+  background: white;
+  color: #909090;
+}
+
+.group:hover {
+  background: #f8f8f8;
+  color: #606060;
+}
+
+input[type = button] {
+  position: absolute;
+  visibility: hidden;
+  display: none;
+}
+
+input[type = button] + label {
+  display: inline-block;
+  border: solid 2px black;
+  border-radius: 12px;
+  background: white;
+  padding: 4px;
+  font-size: 87.5%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input[type = button] + label:hover {
+  background: #d0d0d0;
+}
+
+input[type = button] + label:active {
+  background: #ffff80;
+}
+
+input[disabled = disabled] + label:active {
+  background: grey;
+  animation: shake 1.0s;
+  animation-iteration-count: infinite;
+}
+
+.button-holder {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+
+input[type = checkbox] {
+  display: none;
+}
+
+input[type = checkbox] + label {
+  margin-top: 4px;
+  font-size: 90%;
+  width: 200px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input[type = checkbox] + label:before {
+  content: "";
+  display: inline-block;
+  margin-right: 4px;
+  margin-bottom: -4px;
+  height: 12px;
+  width: 12px;
+  -moz-transition: all .1s ease-in;
+  -o-transition: all .1s ease-in;
+  -webkit-transition: all .1s ease-in;
+  transition: all .1s ease-in;
+  border: solid 2px black;
+  border-radius: 12px;
+}
+
+input[type = checkbox] + label:hover:before {
+  background: #d0d0d0;
+}
+
+input[type = checkbox]:checked + label:before {
+  background: black;
+}
+
+input[type = text] {
+  vertical-align: middle;
+  display: inline-block;
+  font: 10pt charter;
+  width: 92px;
+  height: 10pt;
+  margin: -8px 0px -8px -8px;
+  padding: 1px 4px 1px 1px;
+}
+
+
+/* input[type = checkbox] + label:after {
+  content: "";
+  display: inline-block;
+  visibility: hidden;
+  -moz-transition: all .1s ease-in;
+  -o-transition: all .1s ease-in;
+  -webkit-transition: all .1s ease-in;
+  transition: all .1s ease-in;
+  height: 8px;
+  width: 8px;
+  background: black;
+  border: 1px solid black;
+  border-radius: 8px;
+  position: absolute;
+  left: 30.5px;
+  margin-top: 3px;
+}
+
+input[type = checkbox]:checked + label:after {
+  visibility: visible;
+} */
+
+.feature {
+  display: inline-block;
+  padding-left: 6px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+input[type = radio] {
+  position: absolute;
+  visibility: hidden;
+  display: none;
+}
+
+label {
+  -moz-transition: all .1s ease-in;
+  -o-transition: all .1s ease-in;
+  -webkit-transition: all .1s ease-in;
+  transition: all .1s ease-in;
+  display: inline-block;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+input[type = radio]:checked + label {
+  color: black;
+  font-weight: bold;
+}
+
+#box blockquote {
+  font-size: 87.5%;
+  margin: 0;
+  padding: 0 8px;
+  background: none;
+  border: none;
+  font-style: normal;
+  position: relative;
+}
+
+#box blockquote:before {
+  content: " ";
+  position: absolute;
+  border-left: 2px solid black;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  padding: 4px;
+  top: -4px;
+  bottom: -4px;
+  left: 0px;
+}
+
+#box blockquote:after {
+  content: " ";
+  position: absolute;
+  border-right: 2px solid black;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  padding: 4px;
+  top: -4px;
+  bottom: -4px;
+  right: 0px;
+}
+
+table, th, td {
+  border-collapse: collapse;
+  border: 1px solid #808080;
+}
+
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.stretch {
+  width: 96%;
+}
+
+table.no-head-bold th {
+  font-weight: normal;
+}
+
+table.no-head-bold tr:first-child th {
+  font-weight: bold;
+}
+
+table.lastcol-list tr th:last-child, table.lastcol-list tr td:last-child {
+  min-width: 62.5%;
+}
+
+table .non-pulmonic {
+  display: none;
+}
+
+.bro {
+  display: block;
+  font-size: 80%;
+}
+
+th {
+  width: 1%;
+  font-size: 75%;
+}
+
+td {
+  margin: 0;
+  padding: 0;
+}
+
+th:first-child {
+  padding-right: 4px;
+}
+
+td:empty {
+  background: #f0f0f7;
+}
+
+#consonants tr:first-child th {
+  writing-mode: sideways-lr;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#consonants tr:last-child td {
+  font-size: 90%;
+}
+#consonants th:first-child {
+  text-align: right;
+  width: 3%;
+}
+
+table#vowels {
+  margin-left: auto;
+  margin-right: 0;
+  table-layout: fixed;
+  width: 62.5%;
+}
+
+#vowels th:first-child {
+  text-align: right;
+}
+
+#vowels td {
+  text-align: center;
+}
+
+  div.ant + span.feature, div.dist + span.feature,
+ div.high + span.feature,  div.low + span.feature, div.front + span.feature, div.back + span.feature, div.tense + span.feature,
+  div.atr + span.feature {
+  font-weight: normal;
+}
+
+.plus {
+  color: blue;
+  font-weight: bold;
+}
+
+.minus {
+  color: red;
+  font-weight: bold;
+}
+
+.plusmn {
+  color: dimgrey;
+}
+
+.minus, .plus, .plusmn {
+  -moz-transition: all .5s ease-in;
+  -o-transition: all .5s ease-in;
+  -webkit-transition: all .5s ease-in;
+  transition: all .5s ease-in;
+}
+
+#wbp, #wlp, #wdp, #wap, #wrp, #wqp, #wpp, #wvp, #wup, #wfp, #wgp,
+#wbn, #wln, #wdn, #wan, #wrn, #wqn, #wpn, #wvn, #wun, #wfn, #wgn,
+#wbr, #wlr, #wdr, #war, #wrr, #wqr, #wpr, #wvr, #wur, #wfr, #wgr,
+#wbt, #wlt, #wdt, #wat, #wrt, #wqt, #wpt, #wvt, #wut, #wft, #wgt,
+#wbf, #wlf, #wdf, #waf, #wrf, #wqf, #wpf, #wvf, #wuf, #wff, #wgf,
+#wba, #wla, #wda, #waa, #wra, #wqa, #wpa, #wva, #wua, #wfa, #wga,
+#wbl, #wll, #wdl, #wal, #wrl, #wql, #wpl, #wvl, #wul, #wfl, #wgl,
+#wbz, #wlz, #wdz, #waz, #wrz, #wqz, #wpz, #wvz, #wuz, #wfz, #wgz,
+#wb2, #wl2, #wd2, #wa2, #wr2, #wq2, #wp2, #wv2, #wu2, #wf2, #wg2,
+#wbc, #wlc, #wdc, #wac, #wrc, #wqc, #wpc, #wvc, #wuc, #wfc, #wgc,
+#wbi, #wli, #wdi, #wai, #wri, #wqi, #wpi, #wvi, #wui, #wfi, #wgi,
+#wbe, #wle, #wde, #wae, #wre, #wqe, #wpe, #wve, #wue, #wfe, #wge,
+#vbp, #vlp, #vdp, #vap, #vrp, #vqp, #vpp, #vvp, #vup, #vfp, #vgp,
+#vbn, #vln, #vdn, #van, #vrn, #vqn, #vpn, #vvn, #vun, #vfn, #vgn,
+#vbr, #vlr, #vdr, #var, #vrr, #vqr, #vpr, #vvr, #vur, #vfr, #vgr,
+#vbt, #vlt, #vdt, #vat, #vrt, #vqt, #vpt, #vvt, #vut, #vft, #vgt,
+#vbf, #vlf, #vdf, #vaf, #vrf, #vqf, #vpf, #vvf, #vuf, #vff, #vgf,
+#vba, #vla, #vda, #vaa, #vra, #vqa, #vpa, #vva, #vua, #vfa, #vga,
+#vbl, #vll, #vdl, #val, #vrl, #vql, #vpl, #vvl, #vul, #vfl, #vgl,
+#vbz, #vlz, #vdz, #vaz, #vrz, #vqz, #vpz, #vvz, #vuz, #vfz, #vgz,
+#vb2, #vl2, #vd2, #va2, #vr2, #vq2, #vp2, #vv2, #vu2, #vf2, #vg2,
+#vbc, #vlc, #vdc, #vac, #vrc, #vqc, #vpc, #vvc, #vuc, #vfc, #vgc,
+#vbi, #vli, #vdi, #vai, #vri, #vqi, #vpi, #vvi, #vui, #vfi, #vgi,
+#vbe, #vle, #vde, #vae, #vre, #vqe, #vpe, #vve, #vue, #vfe, #vge,
+#v000, #v001, #v010, #v011, #v020, #v021, #v030, #v031, #v040, #v041, 
+#v100, #v101, #v110, #v111, #v120, #v121, #v130, #v131, #v140, #v141, 
+#v200, #v201, #v210, #v211, #v220, #v221, #v230, #v231, #v240, #v241, 
+#v300, #v301, #v310, #v311, #v320, #v321, #v330, #v331, #v340, #v341, 
+#v400, #v401, #v410, #v411, #v420, #v421, #v430, #v431, #v440, #v441, 
+#v500, #v501, #v510, #v511, #v520, #v521, #v530, #v531, #v540, #v541, 
+#v600, #v601, #v610, #v611, #v620, #v621, #v630, #v631, #v640, #v641 {
+  display: inline-block;
+  width: 35%;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+#wbp, #wlp, #wdp, #wap, #wrp, #wqp, #wpp, #wvp, #wup, #wfp, #wgp,
+#wbn, #wln, #wdn, #wan, #wrn, #wqn, #wpn, #wvn, #wun, #wfn, #wgn,
+#wbr, #wlr, #wdr, #war, #wrr, #wqr, #wpr, #wvr, #wur, #wfr, #wgr,
+#wbt, #wlt, #wdt, #wat, #wrt, #wqt, #wpt, #wvt, #wut, #wft, #wgt,
+#wbf, #wlf, #wdf, #waf, #wrf, #wqf, #wpf, #wvf, #wuf, #wff, #wgf,
+#wba, #wla, #wda, #waa, #wra, #wqa, #wpa, #wva, #wua, #wfa, #wga,
+#wbl, #wll, #wdl, #wal, #wrl, #wql, #wpl, #wvl, #wul, #wfl, #wgl,
+#wbz, #wlz, #wdz, #waz, #wrz, #wqz, #wpz, #wvz, #wuz, #wfz, #wgz,
+#wb2, #wl2, #wd2, #wa2, #wr2, #wq2, #wp2, #wv2, #wu2, #wf2, #wg2,
+#wbc, #wlc, #wdc, #wac, #wrc, #wqc, #wpc, #wvc, #wuc, #wfc, #wgc,
+#wbi, #wli, #wdi, #wai, #wri, #wqi, #wpi, #wvi, #wui, #wfi, #wgi,
+#wbe, #wle, #wde, #wae, #wre, #wqe, #wpe, #wve, #wue, #wfe, #wge {
+  float: left;
+  margin-left: 12%;
+}
+
+#vbp, #vlp, #vdp, #vap, #vrp, #vqp, #vpp, #vvp, #vup, #vfp, #vgp,
+#vbn, #vln, #vdn, #van, #vrn, #vqn, #vpn, #vvn, #vun, #vfn, #vgn,
+#vbr, #vlr, #vdr, #var, #vrr, #vqr, #vpr, #vvr, #vur, #vfr, #vgr,
+#vbt, #vlt, #vdt, #vat, #vrt, #vqt, #vpt, #vvt, #vut, #vft, #vgt,
+#vbf, #vlf, #vdf, #vaf, #vrf, #vqf, #vpf, #vvf, #vuf, #vff, #vgf,
+#vba, #vla, #vda, #vaa, #vra, #vqa, #vpa, #vva, #vua, #vfa, #vga,
+#vbl, #vll, #vdl, #val, #vrl, #vql, #vpl, #vvl, #vul, #vfl, #vgl,
+#vbz, #vlz, #vdz, #vaz, #vrz, #vqz, #vpz, #vvz, #vuz, #vfz, #vgz,
+#vb2, #vl2, #vd2, #va2, #vr2, #vq2, #vp2, #vv2, #vu2, #vf2, #vg2,
+#vbc, #vlc, #vdc, #vac, #vrc, #vqc, #vpc, #vvc, #vuc, #vfc, #vgc,
+#vbi, #vli, #vdi, #vai, #vri, #vqi, #vpi, #vvi, #vui, #vfi, #vgi,
+#vbe, #vle, #vde, #vae, #vre, #vqe, #vpe, #vve, #vue, #vfe, #vge {
+  float: right;
+  margin-right: 12%;
+}
+
+#vup, #wun, #vun, #wbr, #vbr, #wur, #vur, #wvl, #vvl, #vu2,
+#v110, #v111, #v621 {
+  font-variant: small-caps;
+}
+
+#vb2, #vl2, #vd2, #va2, #vr2, #vq2, #vp2, #vv2, #vu2, #vf2, #vg2 {
+  margin-right: 15%;
+}
+
+/*@media only screen and (min-width: 1281px) {*/
+@media only screen and (min-width: 8560px) {
+  body {
+    font-size: 18pt;
+    background: black;
+  }
+
+  #container {
+    display: grid;
+    grid-template-rows: 210px 675px 990px;/*0.5fr 3fr 4fr;*/
+    grid-template-columns: 282px 282px 264px 1062px;/*188px 188px 176px 708px;/*0.8fr 0.8fr 0.75fr 3fr;*/
+  }
+
+  input[type = button] + label {
+    display: inline-block;
+    border: solid 2px black;
+    border-radius: 24px;
+    background: white;
+    padding: 8px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+ input[type = checkbox] + label {
+    margin-top: 8px;
+    font-size: 90%;
+    width: 300px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  input[type = checkbox] + label:before {
+    content: "";
+    display: inline-block;
+    margin-right: 8px;
+    margin-bottom: -5px;
+    height: 18px;
+    width: 18px;
+  }
+
+  label {
+    padding: 2px 6px;
+  }
+}
+
+@media only screen and (max-device-width: 480px) {
+  #container {
+    display: grid;
+    grid-template-rows: 0.3fr 0.1fr 0.1fr 0.1fr 1.5fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #header {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  #switchboard1 {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+
+  #switchboard2 {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+
+  #box {
+    grid-row-start: 3;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  #ipa-chart {
+    grid-row-start: 4;
+    grid-row-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  #footer {
+    grid-row-start: 5;
+    grid-row-end: 6;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  .feature {
+    display: inline-block;
+    padding-left: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .switchboard input[type = radio] + label {
+    padding: 1px 0px;
+  }
+
+  .switchboard input[type = radio]:first-child + label {
+    padding-left: 6px;
+  }
+
+  .switchboard input[type = radio]:first-child + label + input[type = radio] + label + input[type = radio] + label {
+    padding-right: 6px;
+  }
+
+  .switchboard .feature {
+    font-weight: normal;
+    font-size: 80%;
+  }
+
+  .switchboard input[type = button] + label {
+    font-size: 70%;
+    padding: 6px;
+    border-radius: 12px;
+  }
+
+  .switchboard input[type = checkbox] + label {
+    width: 200%;
+    font-weight: normal;
+    margin-top: 2em;
+  }
+
+  table#vowels, table#consonants {
+    width: 100%;
+  }
+}
