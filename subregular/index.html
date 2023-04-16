@@ -5,6 +5,11 @@
         <link rel="stylesheet" href="https://latex.now.sh/style.css">
         <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <style>
+
+            :root {
+                --body-bg-color: rgb(255, 240, 250);
+            }
+
             .center, table, h1, h2, h3, h4, h5{
                 margin-left: auto;
                 margin-right: auto;
@@ -70,12 +75,63 @@
                 <tr><td>sokashas</td><td>sokasas</td></tr>
                 <tr><td>shukesish</td><td>shukeshish</td></tr>
             </table>
-            <p>Take a minute to look through this list for yourself, consider writing down your answers. This may seem like a strange task, but it was real for participants in the studies FILL THE STUDY NAMES HERE!!!. And if you think about it, you have been doing the same thing your whole life as you have learned your native language: for English, when you hear the words INCLUDE THE WORDS HERE, you can probably tell that they originated from another language. Conversely, when you read INCLUDE THEM HERE, you might get the impression that they <i>could have been</i> natural-sounding English words — maybe a name, or a product. However, you likely don't get that same impression about INCLUDE WORDS HERE.</p>
+            <p>Take a minute to look through this list for yourself, consider writing down your answers. This may seem like a strange task, but it was real for participants in the studies <a href="https://journals.linguisticsociety.org/proceedings/index.php/ExtendedAbs/article/viewFile/584/495">Lai (2015)</a> and <a href="https://www.glossa-journal.org/article/id/5304/">Avcu & Hestvik (2020)</a>. And if you think about it, you have been doing the same thing your whole life as you have learned languages: for English, when you hear the words "gnocchi", "tzatziki" and "sriracha", you can probably tell that they originated from another language, based on the way they sound. Conversely, when you hear the words "blick", "nord", or "saf" you might get the impression that they <i>could have been</i> natural-sounding English words — maybe a name, or an item — even though they don't have any English meaning to you. However, you likely don't get that same impression about "bnick", "ngord", or "sapf".</p>
 
-            <p>Why is this the case? And what were THE RESEARCHERS' NAMES investigating with their study?</p>
-            <p>In this article, we will investigate the answers to these questions and gain insight into the connection between language and computation. By the end, you will understand what these researchers predicted about your answers to the above questions, and why they predicted that.</p>
+            <p>Why is this the case? And what were Lai and Avcu & Hestvik investigating with their studies?</p>
+            <p>In this article, we will investigate the answers to these questions, look at foundational material in phonotactics and computability theory, and gain insight along the way into the connection between language and computation. By the end, you will understand what these researchers predicted about your answers to the above questions, and why they predicted that.</p>
 
-            <h3>Phonotactics</h3>
+            <h5>Phonotactics</h5>
+            <p>Phonotactics describes the patterns of sounds (called phonemes when referring to types of sounds, or segments when referring to individual instances of a phoneme) that are used by a language. We've already seen examples of this: a phonologist (a linguist who studes speech sounds) would describe our observation that "bnick" doesn't <i>sound English</i> by saying that "bnick" <i>violates English phonotactics</i>. Phonologists usually denote this ungrammaticality or ill-formedness (meaning that a speaker of the language in question would say this word sounds strange) with an asterisk: *bnick</p>
+            <p>Phonotactics is an additional dimension of a language's phonology (its complete set of sound patterns) beyond its phonemic inventory (the set of types of sounds, or phonemes, it contains) — you might associate Spanish with rolled r's, French with nasalized vowels, or German and Arabic with throaty sounds — and it's true that different languages do have different phonemic inventories (English is uncommon in having its "th" sounds - both the kind in "that" and in "think"). Instead, phonotactics has to do with the sounds that a language allows to cooccur next to each other or within a word — the "bn" consonant cluster from "bnick" is not allowed in English, for example. These phonotactic restrictions, just like phonemic inventories, vary from language to language: German allows clusters like "kn" and "pf" which English prohibits, while a lot of languages allow the "ng" sound from the end of "sing" to occur in places other than at the end of words. Some  languages, on the other hand, are more restrictive than English in some ways, like Spanish, which doesn't allow clusters of "s" followed by a consonant (except if it bridges a syllable boundary), or Turkish, which has restrictions on which vowels can cooccur in the same word.</p>
+            <p>Many of these phonotactic rules, you may have noticed, prohibit certain phonemes from occurring adjacent to each other in a word. Computational phonologists call these sort of restrictions, and the languages that contain them Strictly Local. This name derives from the fact that you can tell whether a word is well formed or not simply by looking at each substring (that is, each piece of the word, without skipping any segments) of the word, and making sure there isn't anything that should be restricted: "blick" sounds ok to English speakers because "bl" is ok ("blend", "blunder", "able"), "li" is ok ("little", "flint", "alliteration") and "ick" is okay ("sick", "trick", "pick" - notice that we treat "ck" as just one sound).</p>
+            <p>However, many languages have restrictions which occur at a distance, like Turkish, which I introduced as having restrictions on which vowels <a href="https://en.wikipedia.org/wiki/Turkish_phonology#Vowel_harmony">can cooccur in the same word</a>. Specifically, vowels in Turkish words agree, or harmonize, in their qualities of backness (how far back the tongue is when the vowel is pronounced) and rounding (whether the speakers lips are rounded). This interaction occurs across syllables and most morphemes (which are parts of words, like suffixes for example), even though there are other consonants in between. <a href="https://aclanthology.org/P11-2011.pdf">Heinz et al. 2011</a> proposes to account for this observation by introducing the idea of a phonological tier: "a level of representation where not all speech sounds are present". That is, Turkish vowels might be separated by consonants when they are pronounced, but we can also think of them as existing within a tier, or projection, from the word, which only contains the vowels that participate in these interactions. Within this tier, the restrictions on front vowels cooccuring with back vowels is still the same Strictly Local - without the consonants in the way, the vowels are right next to each other. This was a very important idea and introduced the concept of Tier-based Strictly Local (also shortened to TSL) languages - ones whose patterns could be expressed as a tier and a set of restricted substrings on that tier. This same paper also introduced what is known as the <em>Subregular Hypothesis</em>, which starts to bring us back to the study question from the beginning of the article, but we are not quite ready to understand what that means, or why it is called that, so lets move on to our next topic.</p>
+
+            <h5>Computability Theory</h5>
+            <p>Suppose you have a lamp. When you first get it, it is turned off, but you can turn it on by pressing a button, or off again by pressing the same button. You might represent this lamp with the following diagram:</p>
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="413pt" height="115pt" viewBox="0.00 0.00 413.36 114.76">
+            <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 110.7569)">
+            <title>G</title>
+            <polygon fill="#fff0fa" stroke="transparent" points="-4,4 -4,-110.7569 409.3571,-110.7569 409.3571,4 -4,4"/>
+            <g id="node1" class="node">
+            <title/>
+            </g>
+            <!-- Lamp Off -->
+            <g id="node3" class="node">
+            <title>Lamp Off</title>
+            <ellipse fill="none" stroke="#000000" cx="144.3784" cy="-53.3784" rx="49.2662" ry="49.2662"/>
+            <ellipse fill="none" stroke="#000000" cx="144.3784" cy="-53.3784" rx="53.2572" ry="53.2572"/>
+            <text text-anchor="middle" x="144.3784" y="-49.1784" font-family="Times,serif" font-size="14.00" fill="#000000">Lamp Off</text>
+            </g>
+            <!-- &#45;&gt;Lamp Off -->
+            <g id="edge1" class="edge">
+            <title>-&gt;Lamp Off</title>
+            <path fill="none" stroke="#000000" d="M54.224,-53.3784C62.2811,-53.3784 71.4614,-53.3784 80.808,-53.3784"/>
+            <polygon fill="#000000" stroke="#000000" points="80.9701,-56.8785 90.9701,-53.3784 80.97,-49.8785 80.9701,-56.8785"/>
+            </g>
+            <!-- Lamp On -->
+            <g id="node2" class="node">
+            <title>Lamp On</title>
+            <ellipse fill="none" stroke="#000000" cx="353.5798" cy="-53.3784" rx="47.5727" ry="47.5727"/>
+            <ellipse fill="none" stroke="#000000" cx="353.5798" cy="-53.3784" rx="51.5556" ry="51.5556"/>
+            <text text-anchor="middle" x="353.5798" y="-49.1784" font-family="Times,serif" font-size="14.00" fill="#000000">Lamp On</text>
+            </g>
+            <!-- Lamp On&#45;&gt;Lamp Off -->
+            <g id="edge3" class="edge">
+            <title>Lamp On-&gt;Lamp Off</title>
+            <path fill="none" stroke="#000000" d="M304.4234,-36.8049C297.5668,-35.0589 290.5571,-33.5638 283.8025,-32.5784 253.8767,-28.213 245.6959,-28.3051 215.7569,-32.5784 212.3308,-33.0675 208.8393,-33.6822 205.3339,-34.391"/>
+            <polygon fill="#000000" stroke="#000000" points="204.4486,-31.0026 195.46,-36.6111 205.9843,-37.8321 204.4486,-31.0026"/>
+            <text text-anchor="middle" x="249.7797" y="-36.5784" font-family="Times,serif" font-size="14.00" fill="#000000">press button</text>
+            </g>
+            <!-- Lamp Off&#45;&gt;Lamp On -->
+            <g id="edge2" class="edge">
+            <title>Lamp Off-&gt;Lamp On</title>
+            <path fill="none" stroke="#000000" d="M197.9813,-53.3784C226.4624,-53.3784 261.6221,-53.3784 291.3094,-53.3784"/>
+            <polygon fill="#000000" stroke="#000000" points="291.5621,-56.8785 301.5621,-53.3784 291.562,-49.8785 291.5621,-56.8785"/>
+            <text text-anchor="middle" x="249.7797" y="-57.5784" font-family="Times,serif" font-size="14.00" fill="#000000">press button</text>
+            </g>
+            </g>
+            </svg>
 
 
         </article>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="413pt" height="115pt" viewBox="0.00 0.00 413.36 114.76">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 110.7569)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-110.7569 409.3571,-110.7569 409.3571,4 -4,4"/>
+<g id="node1" class="node">
+<title/>
+</g>
+<!-- Lamp Off -->
+<g id="node3" class="node">
+<title>Lamp Off</title>
+<ellipse fill="none" stroke="#000000" cx="144.3784" cy="-53.3784" rx="49.2662" ry="49.2662"/>
+<ellipse fill="none" stroke="#000000" cx="144.3784" cy="-53.3784" rx="53.2572" ry="53.2572"/>
+<text text-anchor="middle" x="144.3784" y="-49.1784" font-family="Times,serif" font-size="14.00" fill="#000000">Lamp Off</text>
+</g>
+<!-- &#45;&gt;Lamp Off -->
+<g id="edge1" class="edge">
+<title>-&gt;Lamp Off</title>
+<path fill="none" stroke="#000000" d="M54.224,-53.3784C62.2811,-53.3784 71.4614,-53.3784 80.808,-53.3784"/>
+<polygon fill="#000000" stroke="#000000" points="80.9701,-56.8785 90.9701,-53.3784 80.97,-49.8785 80.9701,-56.8785"/>
+</g>
+<!-- Lamp On -->
+<g id="node2" class="node">
+<title>Lamp On</title>
+<ellipse fill="none" stroke="#000000" cx="353.5798" cy="-53.3784" rx="47.5727" ry="47.5727"/>
+<ellipse fill="none" stroke="#000000" cx="353.5798" cy="-53.3784" rx="51.5556" ry="51.5556"/>
+<text text-anchor="middle" x="353.5798" y="-49.1784" font-family="Times,serif" font-size="14.00" fill="#000000">Lamp On</text>
+</g>
+<!-- Lamp On&#45;&gt;Lamp Off -->
+<g id="edge3" class="edge">
+<title>Lamp On-&gt;Lamp Off</title>
+<path fill="none" stroke="#000000" d="M304.4234,-36.8049C297.5668,-35.0589 290.5571,-33.5638 283.8025,-32.5784 253.8767,-28.213 245.6959,-28.3051 215.7569,-32.5784 212.3308,-33.0675 208.8393,-33.6822 205.3339,-34.391"/>
+<polygon fill="#000000" stroke="#000000" points="204.4486,-31.0026 195.46,-36.6111 205.9843,-37.8321 204.4486,-31.0026"/>
+<text text-anchor="middle" x="249.7797" y="-36.5784" font-family="Times,serif" font-size="14.00" fill="#000000">press button</text>
+</g>
+<!-- Lamp Off&#45;&gt;Lamp On -->
+<g id="edge2" class="edge">
+<title>Lamp Off-&gt;Lamp On</title>
+<path fill="none" stroke="#000000" d="M197.9813,-53.3784C226.4624,-53.3784 261.6221,-53.3784 291.3094,-53.3784"/>
+<polygon fill="#000000" stroke="#000000" points="291.5621,-56.8785 301.5621,-53.3784 291.562,-49.8785 291.5621,-56.8785"/>
+<text text-anchor="middle" x="249.7797" y="-57.5784" font-family="Times,serif" font-size="14.00" fill="#000000">press button</text>
+</g>
+</g>
+</svg>
