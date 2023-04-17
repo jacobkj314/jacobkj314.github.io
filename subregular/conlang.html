@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Your Own MTSL Conlang</title>
+    <link rel="stylesheet" href="https://latex.now.sh/style.css">
+    <style>
+        :root {
+            --body-bg-color: rgb(255, 240, 250);
+        }
+
+        .center,
+        table,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /*table, tbody, tr, th, td{
+                border-top:none;
+                border:none;
+            }*/
+
+        /*These next two are used to remove top and bottom borders from tables*/
+        /*table > tbody > tr:first-child > td,
+            table > tbody > tr:first-child > th {
+                border-top: none;
+            }
+            table > tbody > tr:last-child > td,
+            table > tbody > tr:last-child > th {
+                border-bottom: none;
+            }*/
+
+        .example>tbody>tr>td {
+            font-style: italic;
+            padding: 3px;
+        }
+    </style>
+    <script>
+        //Thanks to ChatGPT for helping me translate my Python code into JS
+
+        vowels = ['a', 'e', 'i', 'o', 'u'];
+        consonants = ['p', 't', 'k', 'm', 'n']
+        sigma = vowels.concat(consonants)
+
+        function tsl_acceptor(tier, restrictions) {
+            return function (w) {
+                return !restrictions.some(function (restriction) {
+                    var re = new RegExp('[^' + tier.join('') + ']', 'g');
+                    return w.replace(re, '').includes(restriction.join(''));
+                });
+            }
+        }
+        function generate_mtsl_acceptor() {
+
+            var acceptors = [
+                tsl_acceptor(['>','<'].concat(sigma), [['>','<']]), //prevent empty words
+                tsl_acceptor(sigma, product(vowels, vowels, vowels)), //prevent three or more adjacent vowels
+                tsl_acceptor(sigma, product(consonants, consonants, consonants)), //prevent three or more adjacent consonants
+            ];
+            var numTiers = Math.floor(Math.random() * 6) + 3; // pick 3-8 tiers
+            for (var i = 0; i < numTiers; i++) {
+                var numSymbols = Math.floor(Math.random() * 5) + 4; // pick 4-8 symbols for the tier
+                var tier = shuffle(sigma).slice(0, numSymbols);
+                if (Math.random() < 0.05) { // possibly add word boundaries to the tier
+                    tier.push('<');
+                }
+                if (Math.random() < 0.05) {
+                    tier.push('>');
+                }
+                var poss = [];
+                for (var j = 0; j < tier.length; j++) {
+                    for (var k = 0; k < tier.length; k++) {
+                        if (j != k) {
+                            poss.push([tier[j], tier[k]]);
+                        }
+                    }
+                }
+                var numRestrictions = Math.floor(Math.random() * 5) + 7; // sample 7-11 possible restrictions for the tier
+                var restrictions = shuffle(poss).slice(0, numRestrictions);
+                acceptors.push(tsl_acceptor(tier, restrictions));
+            }
+            return function (w) {
+                if (w !== null) {
+                    return acceptors.every(function (acceptor) {
+                        return acceptor('>' + w + '<');
+                    });
+                } else {
+                    return acceptors.map(function (acceptor) {
+                        return acceptor(null);
+                    });
+                }
+            }
+        }
+
+        function shuffle(arr) {
+            var shuffled = arr.slice();
+            for (var i = shuffled.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = shuffled[i];
+                shuffled[i] = shuffled[j];
+                shuffled[j] = temp;
+            }
+            return shuffled;
+        }
+
+        function star(sigma, maxLen, filt = (...x) => true) {
+            var result = [];
+            for (var count = 0; count <= maxLen; count++) {
+                var words = Array.from(product(...Array(count).fill(sigma))).map(w => w.join(''));
+                words = words.filter(filt);
+                result.push(...words);
+            }
+            return result;
+        }
+
+        function product(...arrays) {
+            if (!arrays.length) return [[]];
+            var result = [];
+            var [first, ...rest] = arrays;
+            var restProduct = product(...rest);
+            for (var i = 0; i < first.length; i++) {
+                for (var j = 0; j < restProduct.length; j++) {
+                    result.push([first[i], ...restProduct[j]]);
+                }
+            }
+            return result;
+        }
+
+        function mtsl_language() {
+            return star(sigma, 5, generate_mtsl_acceptor())
+        }
+        conlang = shuffle(mtsl_language())
+
+        //this chunk of code gets the list of English words
+        var englishList = [];
+        async function fetchTextFile(url) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                englishList = text.trim().split('\n');
+            } catch (error) {
+                console.error('Error fetching text file:', error);
+            }
+        }
+        fetchTextFile("https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt")
+
+
+        window.onload = function () {
+            var table = document.createElement("table");
+
+            var tHeader = document.createElement("thead");
+            var hRow = document.createElement("tr");
+            var eHeader = document.createElement('td');
+            eHeader.innerText = "English Word";
+            var cHeader = document.createElement('td');
+            cHeader.innerText = "New Word";
+            hRow.appendChild(eHeader);
+            hRow.appendChild(cHeader);
+            tHeader.appendChild(hRow);
+            table.appendChild(tHeader);
+
+            var numRows = Math.min(conlang.length, englishList.length)
+            var numCols = 2;
+            for (var i = 0; i < numRows; i++) {
+                var row = document.createElement("tr");
+                
+                var eCell = document.createElement("td");
+                eCell.innerText = englishList[i];
+                row.appendChild(eCell);
+
+                var cCell = document.createElement("td");
+                cCell.innerText = conlang[i]
+                row.appendChild(cCell);
+
+                table.appendChild(row);
+            }
+            document.body.appendChild(table);
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>Your Own MTSL Conlang!</h1>
+        <p class="author">Jacob Johnson</p>
+    </header>
+    <article class="indent-pars">
+        <p>This is a fun little artistic project I made to show off some of what I have learned while working with <a href="https://nnnNNnnn.info/subregular">Subregular Languages</a>. This website generates a brand new MTSL Conlang each time the page is loaded. Based on recent research in computational phonology, this means that people should actually be quite able to learn these vocabulary items as an actual language, with an actual phonotactic system.</p>
+        <p>For simplicity, I used <a href="https://en.wikipedia.org/wiki/Phoneme#Numbers_of_phonemes_in_different_languages">the most cross-linguistically common phonemes</a> for these conlangs' phonemic inventories. I pull the most common words from <a href="https://gist.github.com/deekayen/4148741">this github repo</a> to map the generated words to English words.</p>
+        <p>Because my research in Subregular Languages has mainly pertained to Phonology, this generator does not generate any morphology (word parts) or syntax (word order). It may produce forms whose mappings to English words do not make complete morphological sense (although I did spend the time to find a list which seems to only include lemmas, or "root" forms of words, so hopefully this should be uncommon). Feel free to imagine whatever morphology and syntax you would like!</p>
+        <p>It takes a few seconds to generate, so please be patient, and just refresh the page if the table does not come up within 20 seconds. Make sure you have JavaScript enabled as well. Enjoy :)</p>
+    </article>
+
+</body>
+
+</html>
