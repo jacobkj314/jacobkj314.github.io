@@ -80,15 +80,20 @@
             <p>Why is this the case? And what were Lai and Avcu & Hestvik investigating with their studies?</p>
             <p>In this article, we will investigate the answers to these questions, look at foundational material in phonotactics and computability theory, and gain insight along the way into the connection between language and computation. By the end, you will understand what these researchers predicted about your answers to the above questions, and why they predicted that.</p>
 
-            <h5>Phonotactics</h5>
+            <h3>Phonotactics</h3>
             <p>Phonotactics describes the patterns of sounds (called phonemes when referring to types of sounds, or segments when referring to individual instances of a phoneme) that are used by a language. We've already seen examples of this: a phonologist (a linguist who studes speech sounds) would describe our observation that "bnick" doesn't <i>sound English</i> by saying that "bnick" <i>violates English phonotactics</i>. Phonologists usually denote this ungrammaticality or ill-formedness (meaning that a speaker of the language in question would say this word sounds strange) with an asterisk: *bnick</p>
             <p>Phonotactics is an additional dimension of a language's phonology (its complete set of sound patterns) beyond its phonemic inventory (the set of types of sounds, or phonemes, it contains) — you might associate Spanish with rolled r's, French with nasalized vowels, or German and Arabic with throaty sounds — and it's true that different languages do have different phonemic inventories (English is uncommon in having its "th" sounds - both the kind in "that" and in "think"). Instead, phonotactics has to do with the sounds that a language allows to cooccur next to each other or within a word — the "bn" consonant cluster from "bnick" is not allowed in English, for example. These phonotactic restrictions, just like phonemic inventories, vary from language to language: German allows clusters like "kn" and "pf" which English prohibits, while a lot of languages allow the "ng" sound from the end of "sing" to occur in places other than at the end of words. Some  languages, on the other hand, are more restrictive than English in some ways, like Spanish, which doesn't allow clusters of "s" followed by a consonant (except if it bridges a syllable boundary), or Turkish, which has restrictions on which vowels can cooccur in the same word.</p>
+            
+            <h5>Local Restrictions</h5>
             <p>Many of these phonotactic rules, you may have noticed, prohibit certain phonemes from occurring adjacent to each other in a word. Computational phonologists call these sort of restrictions, and the languages that contain them Strictly Local. This name derives from the fact that you can tell whether a word is well formed or not simply by looking at each substring (that is, each piece of the word, without skipping any segments) of the word, and making sure there isn't anything that should be restricted: "blick" sounds ok to English speakers because "bl" is ok ("blend", "blunder", "able"), "li" is ok ("little", "flint", "alliteration") and "ick" is okay ("sick", "trick", "pick" - notice that we treat "ck" as just one sound).</p>
+            
+            <h5>Non-Local Restrictions</h5>
             <p>However, many languages have restrictions which occur at a distance, like Turkish, which I introduced as having restrictions on which vowels <a href="https://en.wikipedia.org/wiki/Turkish_phonology#Vowel_harmony">can cooccur in the same word</a>. Specifically, vowels in Turkish words agree, or harmonize, in their qualities of backness (how far back the tongue is when the vowel is pronounced) and rounding (whether the speakers lips are rounded). This interaction occurs across syllables and most morphemes (which are parts of words, like suffixes for example), even though there are other consonants in between. <a href="https://aclanthology.org/P11-2011.pdf">Heinz et al. 2011</a> proposes to account for this observation by introducing the idea of a phonological tier: "a level of representation where not all speech sounds are present". That is, Turkish vowels might be separated by consonants when they are pronounced, but we can also think of them as existing within a tier, or projection, from the word, which only contains the vowels that participate in these interactions. Within this tier, the restrictions on front vowels cooccuring with back vowels is still the same Strictly Local - without the consonants in the way, the vowels are right next to each other. This was a very important idea and introduced the concept of Tier-based Strictly Local (also shortened to TSL) languages - ones whose patterns could be expressed as a tier and a set of restricted substrings on that tier. This same paper also introduced what is known as the <em>Subregular Hypothesis</em>, which starts to bring us back to the study question from the beginning of the article, but we are not quite ready to understand what that means, or why it is called that, so lets move on to our next topic.</p>
 
-            <h5>Computability Theory</h5>
+            <h3>Computability Theory</h3>
+            
+            <h5>Example 1: Lamp</h5>
             <p>Suppose you have a lamp. When you first get it, it is turned off, but you can turn it on by pressing a button, or off again by pressing the same button. You might represent this lamp with the following diagram:</p>
-            <?xml version="1.0" encoding="UTF-8" ?>
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="413pt" height="115pt" viewBox="0.00 0.00 413.36 114.76">
             <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 110.7569)">
             <title>G</title>
@@ -132,8 +137,213 @@
             </g>
             </g>
             </svg>
+            <p>Let's notice a few things about this diagram. First, there are two <b>states</b>: "Lamp Off" and "Lamp On", represented here by circles. Secondly, there is an extra arrow pointing to the "Lamp Off" state, indicating that the lamp is turned off when you first begin using it. Finally, there are transitions between the states, which in this case both represent the action of pressing the button.</p>
+            <p>Computer scientists refer to the sort of systems that can be represented by this sort of diagram as <b>Finite-State-Automata</b> or <b>FSA</b>s. In this example, there are only two states: "Lamp On" and "Lamp Off". But in theory, you can imagine a FSA with arbitrarily (but finitely) many states. The only requirements are that this FSA should have:</p>
+            <ul>
+                <li>A set of finitely many states</li>
+                <li>Some subset of those states designated as <b>starting states</b> (in the diagram, they would have the extra arrow pointing to them, like "Lamp Off" in the above example)</li>
+                <li>A set of <b>transitions</b> between states, associated with some action/operation or <b>symbol</b> ("press button" in this case)</li>
+                <li>Some subset of the states designated as <b>final states</b>. These are denoted with double lines around their border (so in the above example, both states were final states). These allow an FSA to <b>accept or reject</b> a string of input actions/operations/symbols: if that string can lead the FSA to end up in a final state, then the FSA is said to accept that string, but if that is not the case, the FSA rejects the string. To illustrate an FSA with final states, consider the next example:</li>
+            </ul>
+            
+            <h5>Example 2: Gamer Lamp</h5>
+            <p>Suppose you decide that a single-color lamp is too boring, so you decide to upgrade. You buy a lamp that allows you to select between three colors: red, green and blue. Correspondingly, this new lamp has more than just one button; it has four: one for each color (labeled 'r','g','b', respectively), plus one to turn the lamp off (labeled 'x'). However, unfortunately for you, this lamp shipped with an unfortunate defect: if you ever press the 'g' button while the lamp is already shining green, the whole lamp will short-circuit and stop working. To visualize this lamp as an FSA, your diagram might look something like:</p>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="502pt" height="473pt" viewBox="0.00 0.00 502.24 473.40">
+                <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 469.3974)">
+                <title>G</title>
+                <polygon fill="none" stroke="transparent" points="-4,4 -4,-469.3974 498.2352,-469.3974 498.2352,4 -4,4"/>
+                <g id="node1" class="node">
+                <title/>
+                </g>
+                <!-- Off -->
+                <g id="node3" class="node">
+                <title>Off</title>
+                <ellipse fill="none" stroke="#000000" cx="119.4375" cy="-70.5974" rx="24.3838" ry="24.3838"/>
+                <ellipse fill="none" stroke="#000000" cx="119.4375" cy="-70.5974" rx="28.375" ry="28.375"/>
+                <text text-anchor="middle" x="119.4375" y="-66.3974" font-family="Times,serif" font-size="14.00" fill="#000000">Off</text>
+                </g>
+                <!-- &#45;&gt;Off -->
+                <g id="edge1" class="edge">
+                <title>-&gt;Off</title>
+                <path fill="none" stroke="#000000" d="M54.2343,-70.5974C62.5022,-70.5974 71.7511,-70.5974 80.6259,-70.5974"/>
+                <polygon fill="#000000" stroke="#000000" points="80.7912,-74.0975 90.7911,-70.5974 80.7911,-67.0975 80.7912,-74.0975"/>
+                </g>
+                <!-- Green -->
+                <g id="node2" class="node">
+                <title>Green</title>
+                <ellipse fill="none" stroke="#000000" cx="229.4995" cy="-170.5974" rx="34.7366" ry="34.7366"/>
+                <ellipse fill="none" stroke="#000000" cx="229.4995" cy="-170.5974" rx="38.7495" ry="38.7495"/>
+                <text text-anchor="middle" x="229.4995" y="-166.3974" font-family="Times,serif" font-size="14.00" fill="#000000">Green</text>
+                </g>
+                <!-- Green&#45;&gt;Off -->
+                <g id="edge13" class="edge">
+                <title>Green-&gt;Off</title>
+                <path fill="none" stroke="#000000" d="M200.8513,-144.5684C184.6632,-129.8601 164.4849,-111.5266 148.267,-96.7914"/>
+                <polygon fill="#000000" stroke="#000000" points="150.4135,-94.0127 140.6585,-89.8784 145.7062,-99.1936 150.4135,-94.0127"/>
+                <text text-anchor="middle" x="169.3749" y="-122.7974" font-family="Times,serif" font-size="14.00" fill="#000000">x</text>
+                </g>
+                <!-- Blue -->
+                <g id="node4" class="node">
+                <title>Blue</title>
+                <ellipse fill="none" stroke="#000000" cx="350.5877" cy="-70.5974" rx="29.0795" ry="29.0795"/>
+                <ellipse fill="none" stroke="#000000" cx="350.5877" cy="-70.5974" rx="33.0527" ry="33.0527"/>
+                <text text-anchor="middle" x="350.5877" y="-66.3974" font-family="Times,serif" font-size="14.00" fill="#000000">Blue</text>
+                </g>
+                <!-- Green&#45;&gt;Blue -->
+                <g id="edge12" class="edge">
+                <title>Green-&gt;Blue</title>
+                <path fill="none" stroke="#000000" d="M252.4553,-139.2337C262.012,-127.5178 273.7595,-114.6738 286.124,-104.7974 293.6116,-98.8166 302.3023,-93.3843 310.8315,-88.6986"/>
+                <polygon fill="#000000" stroke="#000000" points="312.7252,-91.6578 319.9586,-83.9164 309.4764,-85.4573 312.7252,-91.6578"/>
+                <text text-anchor="middle" x="289.624" y="-109.7974" font-family="Times,serif" font-size="14.00" fill="#000000">b</text>
+                </g>
+                <!-- Red -->
+                <g id="node5" class="node">
+                <title>Red</title>
+                <ellipse fill="none" stroke="#000000" cx="463.6432" cy="-70.5974" rx="26.6721" ry="26.6721"/>
+                <ellipse fill="none" stroke="#000000" cx="463.6432" cy="-70.5974" rx="30.6841" ry="30.6841"/>
+                <text text-anchor="middle" x="463.6432" y="-66.3974" font-family="Times,serif" font-size="14.00" fill="#000000">Red</text>
+                </g>
+                <!-- Green&#45;&gt;Red -->
+                <g id="edge10" class="edge">
+                <title>Green-&gt;Red</title>
+                <path fill="none" stroke="#000000" d="M235.7552,-208.773C247.437,-274.7904 274.7179,-405.8075 311.124,-432.5974 339.3776,-453.3882 362.8883,-454.7941 390.0513,-432.5974 439.2731,-392.3752 456.3921,-197.3866 461.6116,-111.4338"/>
+                <polygon fill="#000000" stroke="#000000" points="465.1163,-111.4537 462.2041,-101.267 458.1282,-111.0464 465.1163,-111.4537"/>
+                <text text-anchor="middle" x="350.5877" y="-452.7974" font-family="Times,serif" font-size="14.00" fill="#000000">r</text>
+                </g>
+                <!-- Broken -->
+                <g id="node6" class="node">
+                <title>Broken</title>
+                <ellipse fill="none" stroke="#000000" cx="350.5877" cy="-248.5974" rx="39.4273" ry="39.4273"/>
+                <text text-anchor="middle" x="350.5877" y="-244.3974" font-family="Times,serif" font-size="14.00" fill="#000000">Broken</text>
+                </g>
+                <!-- Green&#45;&gt;Broken -->
+                <g id="edge11" class="edge">
+                <title>Green-&gt;Broken</title>
+                <path fill="none" stroke="#000000" d="M262.2677,-191.7053C276.5538,-200.9079 293.4741,-211.8072 308.6626,-221.591"/>
+                <polygon fill="#000000" stroke="#000000" points="307.07,-224.7284 317.3722,-227.2014 310.8607,-218.8436 307.07,-224.7284"/>
+                <text text-anchor="middle" x="289.624" y="-213.7974" font-family="Times,serif" font-size="14.00" fill="#000000">g</text>
+                </g>
+                <!-- Off&#45;&gt;Green -->
+                <g id="edge3" class="edge">
+                <title>Off-&gt;Green</title>
+                <path fill="none" stroke="#000000" d="M129.6959,-97.3981C137.3648,-114.2074 149.3764,-135.1639 165.8749,-148.5974 170.7521,-152.5685 176.3902,-155.8423 182.2538,-158.5363"/>
+                <polygon fill="#000000" stroke="#000000" points="180.994,-161.8022 191.5767,-162.3096 183.6202,-155.3135 180.994,-161.8022"/>
+                <text text-anchor="middle" x="169.3749" y="-157.7974" font-family="Times,serif" font-size="14.00" fill="#000000">g</text>
+                </g>
+                <!-- Off&#45;&gt;Off -->
+                <g id="edge5" class="edge">
+                <title>Off-&gt;Off</title>
+                <path fill="none" stroke="#000000" d="M110.8461,-97.7856C110.4643,-108.2976 113.3281,-117.0349 119.4375,-117.0349 123.3513,-117.0349 125.9331,-113.4491 127.1829,-108.1081"/>
+                <polygon fill="#000000" stroke="#000000" points="130.7003,-108.0381 128.0288,-97.7856 123.7237,-107.4663 130.7003,-108.0381"/>
+                <text text-anchor="middle" x="119.4375" y="-121.2349" font-family="Times,serif" font-size="14.00" fill="#000000">x</text>
+                </g>
+                <!-- Off&#45;&gt;Blue -->
+                <g id="edge4" class="edge">
+                <title>Off-&gt;Blue</title>
+                <path fill="none" stroke="#000000" d="M147.4681,-64.8911C160.5896,-62.4972 176.4686,-59.9945 190.8749,-58.7974 236.163,-55.0344 247.9204,-53.9279 293.124,-58.5974 297.9996,-59.1011 303.0713,-59.839 308.0935,-60.7054"/>
+                <polygon fill="#000000" stroke="#000000" points="307.777,-64.2076 318.2537,-62.6304 309.0801,-57.33 307.777,-64.2076"/>
+                <text text-anchor="middle" x="229.4995" y="-63.7974" font-family="Times,serif" font-size="14.00" fill="#000000">b</text>
+                </g>
+                <!-- Off&#45;&gt;Red -->
+                <g id="edge2" class="edge">
+                <title>Off-&gt;Red</title>
+                <path fill="none" stroke="#000000" d="M145.9404,-59.3461C194.8402,-40.153 302.2781,-5.3132 390.0513,-28.5974 403.9881,-32.2945 418.0408,-39.3174 430.0776,-46.5775"/>
+                <polygon fill="#000000" stroke="#000000" points="428.5309,-49.7403 438.8541,-52.1243 432.2708,-43.8231 428.5309,-49.7403"/>
+                <text text-anchor="middle" x="289.624" y="-27.7974" font-family="Times,serif" font-size="14.00" fill="#000000">r</text>
+                </g>
+                <!-- Blue&#45;&gt;Green -->
+                <g id="edge15" class="edge">
+                <title>Blue-&gt;Green</title>
+                <path fill="none" stroke="#000000" d="M326.0255,-93.0716C315.965,-102.0986 304.1219,-112.5006 293.124,-121.5974 285.3083,-128.0621 276.7966,-134.8097 268.6155,-141.1573"/>
+                <polygon fill="#000000" stroke="#000000" points="266.3681,-138.4704 260.5827,-147.3462 270.6404,-144.0155 266.3681,-138.4704"/>
+                <text text-anchor="middle" x="289.624" y="-131.7974" font-family="Times,serif" font-size="14.00" fill="#000000">g</text>
+                </g>
+                <!-- Blue&#45;&gt;Off -->
+                <g id="edge17" class="edge">
+                <title>Blue-&gt;Off</title>
+                <path fill="none" stroke="#000000" d="M317.1974,-73.1192C280.1855,-75.5375 218.7307,-78.4348 165.8749,-75.5974 163.3243,-75.4605 160.6984,-75.2816 158.0542,-75.0731"/>
+                <polygon fill="#000000" stroke="#000000" points="158.1621,-71.5685 147.8862,-74.1484 157.5281,-78.5397 158.1621,-71.5685"/>
+                <text text-anchor="middle" x="229.4995" y="-81.7974" font-family="Times,serif" font-size="14.00" fill="#000000">x</text>
+                </g>
+                <!-- Blue&#45;&gt;Blue -->
+                <g id="edge16" class="edge">
+                <title>Blue-&gt;Blue</title>
+                <path fill="none" stroke="#000000" d="M339.3404,-102.1424C339.2214,-113.0579 342.9705,-121.873 350.5877,-121.873 355.5865,-121.873 358.9194,-118.0767 360.5865,-112.3817"/>
+                <polygon fill="#000000" stroke="#000000" points="364.0988,-112.4925 361.8349,-102.1424 357.1502,-111.6452 364.0988,-112.4925"/>
+                <text text-anchor="middle" x="350.5877" y="-126.073" font-family="Times,serif" font-size="14.00" fill="#000000">b</text>
+                </g>
+                <!-- Blue&#45;&gt;Red -->
+                <g id="edge14" class="edge">
+                <title>Blue-&gt;Red</title>
+                <path fill="none" stroke="#000000" d="M383.8966,-70.5974C396.0074,-70.5974 409.8393,-70.5974 422.545,-70.5974"/>
+                <polygon fill="#000000" stroke="#000000" points="422.8904,-74.0975 432.8903,-70.5974 422.8903,-67.0975 422.8904,-74.0975"/>
+                <text text-anchor="middle" x="411.5513" y="-74.7974" font-family="Times,serif" font-size="14.00" fill="#000000">r</text>
+                </g>
+                <!-- Red&#45;&gt;Green -->
+                <g id="edge7" class="edge">
+                <title>Red-&gt;Green</title>
+                <path fill="none" stroke="#000000" d="M446.092,-96.0266C432.784,-113.212 412.9185,-134.8392 390.0513,-146.5974 355.5614,-164.332 311.7607,-169.9354 278.6243,-171.3251"/>
+                <polygon fill="#000000" stroke="#000000" points="278.1554,-167.8376 268.2658,-171.6383 278.367,-174.8344 278.1554,-167.8376"/>
+                <text text-anchor="middle" x="350.5877" y="-172.7974" font-family="Times,serif" font-size="14.00" fill="#000000">g</text>
+                </g>
+                <!-- Red&#45;&gt;Off -->
+                <g id="edge9" class="edge">
+                <title>Red-&gt;Off</title>
+                <path fill="none" stroke="#000000" d="M440.0218,-50.3414C432.2718,-44.0519 423.4812,-37.2833 415.0513,-31.5974 366.3757,1.2344 344.5293,3.2089 286.124,-2.7974 243.1129,-7.2206 230.7284,-5.8278 190.8749,-22.5974 176.5785,-28.6131 162.1304,-37.6423 150.0042,-46.2522"/>
+                <polygon fill="#000000" stroke="#000000" points="147.616,-43.6632 141.6202,-52.3982 151.7546,-49.3087 147.616,-43.6632"/>
+                <text text-anchor="middle" x="289.624" y="-7.7974" font-family="Times,serif" font-size="14.00" fill="#000000">x</text>
+                </g>
+                <!-- Red&#45;&gt;Blue -->
+                <g id="edge8" class="edge">
+                <title>Red-&gt;Blue</title>
+                <path fill="none" stroke="#000000" d="M435.6373,-57.7517C429.0221,-55.2859 421.898,-53.0757 415.0513,-51.7974 406.9041,-50.2763 398.3104,-51.05 390.1466,-52.9611"/>
+                <polygon fill="#000000" stroke="#000000" points="389.0849,-49.6248 380.4605,-55.7787 391.0401,-56.3462 389.0849,-49.6248"/>
+                <text text-anchor="middle" x="411.5513" y="-56.7974" font-family="Times,serif" font-size="14.00" fill="#000000">b</text>
+                </g>
+                <!-- Red&#45;&gt;Red -->
+                <g id="edge6" class="edge">
+                <title>Red-&gt;Red</title>
+                <path fill="none" stroke="#000000" d="M453.9028,-100.0126C453.6933,-110.5766 456.9401,-119.1893 463.6432,-119.1893 467.9374,-119.1893 470.8132,-115.6547 472.2704,-110.3367"/>
+                <polygon fill="#000000" stroke="#000000" points="475.7913,-110.3302 473.3837,-100.0126 468.8317,-109.5796 475.7913,-110.3302"/>
+                <text text-anchor="middle" x="463.6432" y="-123.3893" font-family="Times,serif" font-size="14.00" fill="#000000">r</text>
+                </g>
+                <!-- Broken&#45;&gt;Broken -->
+                <g id="edge18" class="edge">
+                <title>Broken-&gt;Broken</title>
+                <path fill="none" stroke="#000000" d="M347.8042,-288.0782C347.9753,-298.3304 348.9031,-306.0611 350.5877,-306.0611 351.6405,-306.0611 352.3978,-303.0413 352.8594,-298.2735"/>
+                <polygon fill="#000000" stroke="#000000" points="356.3654,-298.2411 353.3712,-288.0782 349.3742,-297.8901 356.3654,-298.2411"/>
+                <text text-anchor="middle" x="350.5877" y="-310.2611" font-family="Times,serif" font-size="14.00" fill="#000000">r</text>
+                </g>
+                <!-- Broken&#45;&gt;Broken -->
+                <g id="edge19" class="edge">
+                <title>Broken-&gt;Broken</title>
+                <path fill="none" stroke="#000000" d="M345.1141,-287.812C344.3979,-307.0183 346.2224,-324.0611 350.5877,-324.0611 354.1685,-324.0611 356.0397,-312.5928 356.2012,-297.8695"/>
+                <polygon fill="#000000" stroke="#000000" points="359.7002,-297.7623 356.0613,-287.812 352.7009,-297.8598 359.7002,-297.7623"/>
+                <text text-anchor="middle" x="350.5877" y="-328.2611" font-family="Times,serif" font-size="14.00" fill="#000000">g</text>
+                </g>
+                <!-- Broken&#45;&gt;Broken -->
+                <g id="edge20" class="edge">
+                <title>Broken-&gt;Broken</title>
+                <path fill="none" stroke="#000000" d="M343.0159,-287.4865C340.637,-314.9064 343.1609,-342.0611 350.5877,-342.0611 357.0861,-342.0611 359.8308,-321.2708 358.8218,-297.704"/>
+                <polygon fill="#000000" stroke="#000000" points="362.2991,-297.2391 358.1595,-287.4865 355.3137,-297.692 362.2991,-297.2391"/>
+                <text text-anchor="middle" x="350.5877" y="-346.2611" font-family="Times,serif" font-size="14.00" fill="#000000">b</text>
+                </g>
+                <!-- Broken&#45;&gt;Broken -->
+                <g id="edge21" class="edge">
+                <title>Broken-&gt;Broken</title>
+                <path fill="none" stroke="#000000" d="M341.3772,-287.1498C336.8242,-322.2962 339.8943,-360.0611 350.5877,-360.0611 360.2368,-360.0611 363.6789,-329.312 360.914,-297.4839"/>
+                <polygon fill="#000000" stroke="#000000" points="364.3515,-296.7163 359.7982,-287.1498 357.392,-297.4678 364.3515,-296.7163"/>
+                <text text-anchor="middle" x="350.5877" y="-364.2611" font-family="Times,serif" font-size="14.00" fill="#000000">x</text>
+                </g>
+                </g>
+                </svg>
+            <p>Looking at this new diagram, we see how, even though we only have three more states and three more symbols than before, the automaton is much more complicated than before! Shoutout to <a href="https://github.com/ganeshutah/Jove">Jove</a>, and <a href="https://edotor.net">edotor.net</a>, which I used to create and render the <a href="https://en.wikipedia.org/wiki/DOT_(graph_description_language)">dot code</a>, for putting up with it. But importantly, look at the function performed by the final vs non-final states: any string of transitions that ends with the FSA in a final state corresponds to a string of button presses that ends with a functional lamp, while any string of transitions that ends with the FSA in the non-final "Broken" state, corresponds to a string of button presses that leaves you with a broken lamp. Try this for yourself: the strings 'rgbrgbrgb', 'rrrrrrrrrrr', and 'gbgrgxgbgrgxgbgrgx' all leave you in a final state and with a still-functioning lamp. Because the FSA accepts these strings, they are said to be in the <b>language</b> of the FSA. On the other hand, 'gg', 'rgbrgbrgbrrggbb', and 'grgbgg' are strings not in the language of this FSA.</p>
 
+            <h5>Example 3: </h5>
 
+            <h5>Regular Languages and the Chomsky Hierarchy</h5>
+            
+            <h3>Subregular Hypothesis</h3>
         </article>
     </body>
 </html>
