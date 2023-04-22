@@ -50,7 +50,7 @@ def mitsl_language():
 conlang = mitsl_language()
 shuffle(conlang)
 
-url = 'http://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt'
+url = 'https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt'
 
 from pyodide.http import open_url
 
