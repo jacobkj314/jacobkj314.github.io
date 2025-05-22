@@ -11,7 +11,7 @@ if len(argv) < 2:
 target = argv[1]
 
 #format page content
-content = """
+content = f"""
 <!DOCTYPE html>
 <html>
   <head>
