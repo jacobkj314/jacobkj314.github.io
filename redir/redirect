@@ -1,0 +1,6 @@
+#/bin/bash
+message=`python redirect.py $@`
+
+git add *
+git commit -m "$message"
+git push
