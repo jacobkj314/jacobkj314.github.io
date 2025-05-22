@@ -42,7 +42,7 @@ if slug in slugs:
   slug = slug + str(count)
 
 #create page
-page = Path(slug) / "index.txt"
+page = Path(slug) / "index.html"
 page.parent.mkdir()
 page.write_text(content)
 
