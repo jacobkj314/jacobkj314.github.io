@@ -1,0 +1,10 @@
+{
+  "name": "Kick Timer",
+  "short_name": "Kicks",
+  "description": "Count your baby kicking!",
+  "start_url": "/kicktimer",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "scope": "/kicktimer"
+}

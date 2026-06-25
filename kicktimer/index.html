@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Your App Name">
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+          .catch(err => console.log('Service Worker registration failed'));
+      }
+    </script>
+    
+
+
 <title>Kick Timer</title>
 <style>
     body {font-family:Arial,Helvetica,sans-serif; text-align:center; margin:2rem;}
-    #timer, #count {font-size:4rem; margin:1rem;}
+    #timer, #count, #average{font-size:4rem; margin:1rem;}
+    #average {color:darkgray;}
     button {
         font-size:2rem;
         padding:1rem 2rem;
@@ -21,15 +37,87 @@
 
 <h1>Kick Timer</h1>
 
-<div id="timer">00:00</div>
+<div><div id="timer">00:00</div> <div id="average" >Average: 00:00</div></div>
 <button id="startBtn">Start Timer</button>
 
 <div id="count">Kick count: 0</div>
 <button id="kickBtn" disabled>Kick</button>
 
 <script>
+
+
+const DATA_KEY = 'timestampDurations';
+
+// Add a new entry
+function addEntry(timestamp, duration) {
+  const entries = getEntries();
+  entries.push({ timestamp, duration });
+  localStorage.setItem(DATA_KEY, JSON.stringify(entries));
+}
+
+// Get all entries (in order they were added)
+function getEntries() {
+  const data = localStorage.getItem(DATA_KEY);
+  return data ? JSON.parse(data) : [];
+}
+
+// Remove an entry by index
+function removeEntry(index) {
+  const entries = getEntries();
+  entries.splice(index, 1);
+  localStorage.setItem(DATA_KEY, JSON.stringify(entries));
+}
+
+// Clear all entries
+function clearAllEntries() {
+  localStorage.removeItem(DATA_KEY);
+}
+
+function downloadCSV() {
+  const entries = getEntries();
+  
+  if (entries.length === 0) {
+    alert('No data to download');
+    return;
+  }
+  
+  // Create CSV header
+  let csv = 'Timestamp,Duration (seconds)\n';
+  
+  // Add each entry as a row
+  entries.forEach(entry => {
+    csv += `"${new Date(entry.timestamp).toLocaleString(navigator.language).slice(0,19)}","${Math.floor(entry.duration / 1000)}"\n`;
+  });
+  
+  // Create a blob and download
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kicktimer_${new Date().toLocaleString(navigator.language).slice(0, 19)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.remove();
+}
+
+// Call it with: downloadCSV()
+
+
+// Example usage:
+// addEntry('2024/01/06 09:44', '5:23');
+// addEntry('2024/01/07 10:05', '5:44');
+// console.log(getEntries());
+
+
+
+
+
+
+
 let timerInterval = null;
 let startTime = 0;
+let elapsedTime = 0;
 let kickCount = 0;
 const MAX_KICKS = 10;
 
@@ -38,6 +126,33 @@ const startBtn = document.getElementById('startBtn');
 const kickBtn = document.getElementById('kickBtn');
 const countEl = document.getElementById('count');
 
+const averageEl = document.getElementById('average');
+function formatAverage(){
+
+    const entries = getEntries();
+    average = entries.length > 0 ? entries.reduce((sum, obj) => sum + obj.duration, 0) / entries.length : 0;    
+    averageEl.textContent = "Average: " + formatMs(average);
+    return average;
+}
+formatAverage();
+averageEl.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    if (confirm("Press OK to erase stored data, Cancel to cancel.")) {
+        clearAllEntries();
+    }   
+    formatAverage();
+});
+
+// download CSV
+timerEl.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    if (confirm("Press OK to download your saved data")) {
+        downloadCSV();
+    }   
+});
+
+
+//This is the main timer functionality
 function formatMs(ms) {
     const s = Math.floor(ms / 1000);
     const m = Math.floor(s / 60);
@@ -54,8 +169,10 @@ startBtn.addEventListener('click', () => {
     kickCount = 0;
     countEl.textContent = `Kick count: ${kickCount}`;
     startTime = Date.now();
+    elapsedTime = 0;
     timerInterval = setInterval(() => {
-        timerEl.textContent = formatMs(Date.now() - startTime);
+        elapsedTime = Date.now() - startTime;
+        timerEl.textContent = formatMs(elapsedTime);
     }, 250);
     kickBtn.disabled = false;
 });
@@ -65,6 +182,8 @@ kickBtn.addEventListener('click', () => {
     kickCount++;
     countEl.textContent = `Kick count: ${kickCount}`;
     if (kickCount >= MAX_KICKS) {
+        addEntry(startTime, elapsedTime);
+        formatAverage();
         clearInterval(timerInterval);
         timerInterval = null;
         startBtn.innerHTML = "Start Timer";
