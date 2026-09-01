@@ -161,7 +161,7 @@ function formatMs(ms) {
 }
 
 startBtn.addEventListener('click', () => {
-    if (timerInterval) {          // already running
+    if (timerInterval && confirm("Are you sure you want to restart?")) {          // already running
       clearInterval(timerInterval);
       timerInterval = null;
     } 
