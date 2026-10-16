@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Your App Name">
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+          .catch(err => console.log('Service Worker registration failed'));
+      }
+    </script>
+    
+
+
+<title>511 Contraction Timer</title>
+<style>
+    body {font-family:Arial,Helvetica,sans-serif; text-align:center; margin:2rem;}
+    #timer, #count, #average{font-size:4rem; margin:1rem;}
+    #average {color:darkgray;}
+    button {
+        font-size:2rem;
+        padding:1rem 2rem;
+        margin:1rem;
+        width:100%;
+        height:900px;
+        max-width:900px;
+        border-radius:8px;
+    }
+</style>
+</head>
+<body>
+
+<h1>511 Contraction Timer</h1>
+
+<div>
+  Average Duration: <div id="duration">00:00</div> 
+  
+  Average Interval: <div id="interval" >Average: 00:00</div>
+</div>
+<button id="button">Start Contraction</button>
+
+<script>
+
+
+const DATA_KEY = 'timestampDurations';
+
+const duration = document.getElementById('duration');
+let duration_str = "00:00";
+const interval = document.getElementById('interval');
+let interval_str = "00:00";
+const button = document.getElementById('button');
+
+let in_contraction = false;
+let startTime = 0;
+let endTime = 0;
+
+
+
+
+
+function formatMs(ms) {
+    const s = Math.floor(ms / 1000);
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// Get all entries (in order they were added)
+function getEntries() {
+  const data = localStorage.getItem(DATA_KEY);
+  return data ? JSON.parse(data) : [];
+}
+// Add a new entry
+function addEntry(start, end) {
+  const entries = getEntries();
+  console.log(entries);
+  entries.push({ start, end });
+  localStorage.setItem(DATA_KEY, JSON.stringify(entries));
+}
+
+
+function updateEntries(){
+  const entries = getEntries();
+  let newentries = [];
+
+  let duration_accumulator = 0;
+  let interval_accumulator = 0;
+  let previous_start = -1;
+  for(entry in entries){
+    entry = entries[entry];
+    console.log(entry);
+    let start = entry.start;
+    let end = entry.end;
+    if(Date.now() - end < 60*60*1000){
+      newentries.push(entry);
+      
+      duration_accumulator += (end - start);
+
+      if(previous_start != -1){
+        interval_accumulator += (start - previous_start);
+      }
+      previous_start = start;
+    }
+  }
+  localStorage.setItem(DATA_KEY, JSON.stringify(entries));
+
+  console.log(duration_accumulator);
+
+  duration_str = formatMs(duration_accumulator / newentries.length);
+  interval_str = formatMs(newentries.length == 0 ? 0 : interval_accumulator / (newentries.length - 1));
+}
+
+function updateDisplay(){
+  duration.innerHTML = duration_str;
+  interval.innerHTML = interval_str;
+}
+
+
+button.addEventListener('click', () => {
+  if(in_contraction){
+    //ending and recording contraction
+    button.innerHTML = "Start Contraction";
+    endTime = Date.now();
+    addEntry(startTime, endTime);
+    updateEntries();
+    updateDisplay();
+  } else {
+    //starting a contraction
+    button.innerHTML = "End Contraction";
+    startTime = Date.now();
+  }
+  in_contraction = !in_contraction;
+});
+updateEntries();
+updateDisplay();
+
+
+
+</script>
+
+</body>
+</html>

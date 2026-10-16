@@ -1,0 +1,10 @@
+{
+  "name": "511 Labor Timer",
+  "short_name": "Contraction Timer",
+  "description": "Count your contractions!",
+  "start_url": "/511",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "scope": "/511"
+}
