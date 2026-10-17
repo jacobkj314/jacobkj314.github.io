@@ -148,7 +148,7 @@ function updateEntries(){
       previous_start = start;
     }
   }
-  localStorage.setItem(DATA_KEY, JSON.stringify(entries));
+  localStorage.setItem(DATA_KEY, JSON.stringify(newentries));
 
 
   duration_str = formatMs(newentries.length < 1 ? 0 : duration_accumulator / newentries.length);
