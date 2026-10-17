@@ -20,29 +20,58 @@
 <title>511 Contraction Timer</title>
 <style>
     body {font-family:Arial,Helvetica,sans-serif; text-align:center; margin:2rem;}
-    #timer, #count, #average{font-size:4rem; margin:1rem;}
-    #average {color:darkgray;}
+    #summary{font-size:2rem; margin:1rem;}
     button {
         font-size:2rem;
         padding:1rem 2rem;
         margin:1rem;
         width:100%;
-        height:900px;
+        height:600px;
         max-width:900px;
         border-radius:8px;
     }
+    table {
+        width: 100%;
+        max-width: 900px;
+        margin: 1rem auto;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    th,
+    td {
+        padding: 0.75rem 1rem;
+        border: 1px solid #ccc; /* lines between rows */
+    }
+
+    th {
+        border-bottom: 2px solid #888;
+    }
+
+
 </style>
 </head>
 <body>
 
 <h1>511 Contraction Timer</h1>
 
-<div>
-  Average Duration: <div id="duration">00:00</div> 
-  
-  Average Interval: <div id="interval" >Average: 00:00</div>
+<div id="summary">
+  Average Duration: <span id="duration">00:00</span> 
+  <br/>
+  Average Interval: <span id="interval" >Average: 00:00</span>
+  <br/>
+  Contractions in the past hour: <span id="counter"></span>
 </div>
-<button id="button">Start Contraction</button>
+<button id="button">
+  <span id="buttonText">Start Contraction</span>
+  <br/>
+  <span id="timer"></span> <span id="timerMessage"></span>
+</button>
+
+<table>
+  <thead><td>Start</td><td>Stop</td><td>Duration</td></thead>
+  <tbody id="log"></tbody>
+</table>
 
 <script>
 
@@ -53,7 +82,12 @@ const duration = document.getElementById('duration');
 let duration_str = "00:00";
 const interval = document.getElementById('interval');
 let interval_str = "00:00";
+const counter = document.getElementById('counter');
 const button = document.getElementById('button');
+const buttonText = document.getElementById('buttonText');
+const timer = document.getElementById('timer');
+const timerMessage = document.getElementById('timerMessage');
+const log = document.getElementById('log');
 
 let in_contraction = false;
 let startTime = 0;
@@ -62,6 +96,15 @@ let endTime = 0;
 
 
 
+function formatTime(timestampMs) {
+    const date = new Date(timestampMs);
+    return date.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
+}
 
 function formatMs(ms) {
     const s = Math.floor(ms / 1000);
@@ -78,7 +121,6 @@ function getEntries() {
 // Add a new entry
 function addEntry(start, end) {
   const entries = getEntries();
-  console.log(entries);
   entries.push({ start, end });
   localStorage.setItem(DATA_KEY, JSON.stringify(entries));
 }
@@ -93,7 +135,6 @@ function updateEntries(){
   let previous_start = -1;
   for(entry in entries){
     entry = entries[entry];
-    console.log(entry);
     let start = entry.start;
     let end = entry.end;
     if(Date.now() - end < 60*60*1000){
@@ -109,32 +150,74 @@ function updateEntries(){
   }
   localStorage.setItem(DATA_KEY, JSON.stringify(entries));
 
-  console.log(duration_accumulator);
 
-  duration_str = formatMs(duration_accumulator / newentries.length);
-  interval_str = formatMs(newentries.length == 0 ? 0 : interval_accumulator / (newentries.length - 1));
+  duration_str = formatMs(newentries.length < 1 ? 0 : duration_accumulator / newentries.length);
+  interval_str = formatMs(newentries.length <= 1 ? 0 : interval_accumulator / (newentries.length - 1));
+}
+function clearEntries() {
+  localStorage.setItem(DATA_KEY, JSON.stringify([]));
 }
 
 function updateDisplay(){
   duration.innerHTML = duration_str;
   interval.innerHTML = interval_str;
+  counter.innerHTML = getEntries().length;
+
+  log.replaceChildren();
+  const entries = getEntries();
+  for(i in entries){
+    let entry = entries[i];
+    let start = formatTime(entry.start);
+    let end = formatTime(entry.end);
+    let duration = formatMs(entry.end - entry.start);
+
+    let row = log.insertRow();
+    [start, end, duration].forEach(value => {
+    row.insertCell().textContent = value;
+});
+  }
 }
 
+let timerInterval = null;
+function updateTimer(){
+  if(timerInterval != null){
+    return;
+  }
+  if(startTime == 0){
+    const entries = getEntries();
+    if(entries.length == 0){
+      return;
+    } else {
+      startTime = entries[entries.length - 1].start;
+      timerMessage.innerHTML = in_contraction ? "since start of contraction" : "since start of last contraction";
+    }
+  }
+  elapsedTime = Date.now() - startTime;
+  timer.innerHTML = formatMs(elapsedTime);
+  timerInterval = setInterval(() => {
+    elapsedTime = Date.now() - startTime;
+    timer.innerHTML = formatMs(elapsedTime);
+  }, 250);
+}
+updateTimer();
 
 button.addEventListener('click', () => {
   if(in_contraction){
     //ending and recording contraction
-    button.innerHTML = "Start Contraction";
+    buttonText.innerHTML = "Start Contraction";
+
     endTime = Date.now();
     addEntry(startTime, endTime);
     updateEntries();
     updateDisplay();
   } else {
     //starting a contraction
-    button.innerHTML = "End Contraction";
+    buttonText.innerHTML = "End Contraction";
     startTime = Date.now();
   }
   in_contraction = !in_contraction;
+  timerMessage.innerHTML = in_contraction ? "since start of contraction" : "since start of last contraction";
+  updateTimer();
 });
 updateEntries();
 updateDisplay();
