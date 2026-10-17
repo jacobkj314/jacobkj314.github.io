@@ -26,7 +26,6 @@
         padding:1rem 2rem;
         margin:1rem;
         width:100%;
-        height:600px;
         max-width:900px;
         border-radius:8px;
     }
@@ -62,7 +61,7 @@
   <br/>
   Contractions in the past hour: <span id="counter"></span>
 </div>
-<button id="button">
+<button id="button" style="height:600px">
   <span id="buttonText">Start Contraction</span>
   <br/>
   <span id="timer"></span> <span id="timerMessage"></span>
@@ -72,6 +71,8 @@
   <thead><td>Start</td><td>Stop</td><td>Duration</td></thead>
   <tbody id="log"></tbody>
 </table>
+
+<button id="export">Export Table</button>
 
 <script>
 
@@ -127,7 +128,7 @@ function addEntry(start, end) {
 
 
 function updateEntries(){
-  const entries = getEntries();
+  let entries = getEntries();
   let newentries = [];
 
   let duration_accumulator = 0;
@@ -148,11 +149,18 @@ function updateEntries(){
       previous_start = start;
     }
   }
-  localStorage.setItem(DATA_KEY, JSON.stringify(newentries));
+  entries = newentries;
+  localStorage.setItem(DATA_KEY, JSON.stringify(entries));
 
+  let duration_avg = newentries.length < 1 ? 0 : duration_accumulator / newentries.length;
+  let interval_avg = newentries.length <= 1 ? 0 : interval_accumulator / (newentries.length - 1);
 
-  duration_str = formatMs(newentries.length < 1 ? 0 : duration_accumulator / newentries.length);
-  interval_str = formatMs(newentries.length <= 1 ? 0 : interval_accumulator / (newentries.length - 1));
+  if(duration_avg > 60*1000 && interval_avg < 5*60*1000 && entries.length > 6){
+    alert("Your Contractions over the past hour have been longer than one minute and closer together than 5 minutes on average. Please go to the hospital.")
+  }
+
+  duration_str = formatMs(duration_avg);
+  interval_str = formatMs(interval_avg);
 }
 function clearEntries() {
   localStorage.setItem(DATA_KEY, JSON.stringify([]));
@@ -173,8 +181,8 @@ function updateDisplay(){
 
     let row = log.insertRow();
     [start, end, duration].forEach(value => {
-    row.insertCell().textContent = value;
-});
+      row.insertCell().textContent = value;
+    });
   }
 }
 
@@ -222,6 +230,31 @@ button.addEventListener('click', () => {
 updateEntries();
 updateDisplay();
 
+
+
+async function export_log() {
+
+  let log = "Start      End        Duration\n"
+
+  const entries = getEntries();
+  for(i in entries){
+    let entry = entries[i];
+    let start = formatTime(entry.start);
+    let end = formatTime(entry.end);
+    let duration = formatMs(entry.end - entry.start);
+
+    log += start + "   " + end + "   " + duration +"\n"
+  }
+
+  try {
+    await navigator.clipboard.writeText(log);
+    console.log("Copied to clipboard!");
+    alert("Log copied to clipboard!")
+  } catch (error) {
+    console.error("Could not copy text:", error);
+  }
+}
+document.querySelector("#export").addEventListener("click", export_log);
 
 
 </script>
