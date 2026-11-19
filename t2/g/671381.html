@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A scavenger hunt around Temple Square">
+  <title>Temple² Scavenger Hunt</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      color: #222;
+      background: #f5f5f5;
+    }
+
+    header {
+      padding: 1.5rem 1rem;
+      text-align: center;
+      background: #fff;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.25rem);
+    }
+
+    main {
+      width: min(100% - 2rem, 1100px);
+      margin: 1.5rem auto;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+    }
+
+    figure {
+      margin: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 2px 10px rgb(0 0 0 / 8%);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+figure img.portrait {
+  aspect-ratio: auto;
+  object-fit: initial;
+}
+
+
+
+    figcaption {
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      padding: 1.5rem 1rem;
+      text-align: center;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Temple² Scavenger Hunt</h1>
+    <p>Group 11</p>
+  </header>
+
+  <main>
+    <section class="gallery" aria-label="Photo gallery"><figure><img src="../images/a/090612.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/696607.jpg" loading="lazy"></figure>
+<figure><img src="../images/b/527421.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/960898.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/362208.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/817896.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/637652.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/875715.jpg" loading="lazy"></figure>
+<figure><img src="../images/b/477613.jpg" loading="lazy"></figure>
+<figure><img src="../images/b/790722.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/957808.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/555399.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/126972.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/321667.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/752829.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/653987.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/049413.jpg" loading="lazy"></figure>
+<figure><img src="../images/b/377533.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/229013.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/948732.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/327642.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/153878.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/837157.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/424236.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/609097.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/998967.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/418012.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/079864.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/494969.jpg" loading="lazy"></figure>
+<figure><img src="../images/a/529407.jpg" loading="lazy"></figure>
+</section>
+  </main>
+
+<script>
+  document.querySelectorAll(".gallery img").forEach((img) => {
+    function checkOrientation() {
+      if (img.naturalHeight > img.naturalWidth) {
+        img.classList.add("portrait");
+      }
+    }
+
+    if (img.complete) {
+      checkOrientation();
+    } else {
+      img.addEventListener("load", checkOrientation, { once: true });
+    }
+  });
+</script>
+
+
+</body>
+</html>
