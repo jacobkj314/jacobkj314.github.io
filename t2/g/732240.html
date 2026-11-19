@@ -83,6 +83,37 @@ figure img.portrait {
   </header>
 
   <main>
+
+
+
+    <h3>Rules</h3>
+    <ol>
+      <li>Send selfies to 801-498-0140. Two or three of us will be judging the locations to see if your group found it.</li>
+      <li>Make sure your whole group of youth is in your selfies.</li>
+      <li>All selfies can be taken from the pavement. Do not step off paths onto grounds or plants.</li>
+      <li>Do not leave Temple Square grounds, all selfies can be taken without leaving the grounds.</li>
+      <li>Please do not disrupt other guests at Temple Square.</li>
+      <li>Take the time to ponder where it is you're at and the history.</li>
+      <li>Help each other in your group to find the locations. </li>
+      <li>Make sure your selfies do not have gang signs (Mitchum's rule) This might be something you wanna show your grandchildren some day.</li>
+      <li>Make sure your selfies don't fully obscure the location.</li>
+    </ol>
+
+    <h3>Strategies</h3>
+    <p>Take random selfies so other groups, as they see you, will try to figure out what you were taking a selfie of. Do not send fake selfies in.</p>
+
+    <h3>Notes:</h3>
+    <ol>
+      <li>The validation for Conference Center parking can be found in the lower floor of the visitor center. I have sent a photo on GroupMe where this can be located.</li>
+      <li>Each group will be given 28 locations, but not all of them are the same.</li>
+      <li>All photo locations are publicly accessible as of last week. Do not go into Tabernacle or Assembly Hall, since none of the selfie locations are inside of those two buildings. Each of those buildings may be open tonight.</li>
+      <li>The two buildings north of the Salt Lake Temple itself are actually now part of the temple and are not open or accessible to the public.</li>
+    </ol>
+
+    <h3>Scavenger Hunt Targets</h3>
+    <p>Hint: you can tap on the image to keep track of which targets you have found</p>
+
+
     <section class="gallery" aria-label="Photo gallery"><figure><img src="../images/a/079864.jpg" loading="lazy"></figure>
 <figure><img src="../images/a/875715.jpg" loading="lazy"></figure>
 <figure><img src="../images/b/209544.jpg" loading="lazy"></figure>
@@ -132,6 +163,50 @@ figure img.portrait {
   });
 </script>
 
+<script>
+  const checkmarkStyle = document.createElement("style");
+  checkmarkStyle.textContent = `
+    .gallery figure {
+      position: relative;
+    }
+
+    .gallery figure.is-checked::before {
+      content: "✓";
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: #16803c;
+      color: white;
+      font: bold 1.25rem/1 system-ui, sans-serif;
+      pointer-events: none;
+    }
+
+    .gallery img {
+      cursor: pointer;
+    }
+  `;
+  document.head.appendChild(checkmarkStyle);
+
+  document.querySelectorAll(".gallery img").forEach((img) => {
+    const key = "image-checked:" + img.src;
+    const figure = img.closest("figure");
+
+    if (localStorage.getItem(key) === "true") {
+      figure.classList.add("is-checked");
+    }
+
+    img.addEventListener("click", () => {
+      const isChecked = figure.classList.toggle("is-checked");
+      localStorage.setItem(key, isChecked);
+    });
+  });
+</script>
 
 </body>
 </html>
